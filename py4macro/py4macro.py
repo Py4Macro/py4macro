@@ -16,7 +16,7 @@ def trend(s, lamb=1600):
     Parameter（引数）:
         s: Seriesもしくは１列のDataFrameとし，行のラベルはDatetimeIndexとすること。
         lamb: 四半期用のデータでは通常の値（デフォルト：1600）
-    
+
     return（返り値）:
         Hodrick-Prescott filterで計算したtrend（トレンド）のSeries
 
@@ -24,7 +24,7 @@ def trend(s, lamb=1600):
     例: trend_cycle(df.loc[:,'gdp'])
     """
     from statsmodels.tsa.filters.hp_filter import hpfilter
-    
+
     return hpfilter(s.dropna(), lamb=lamb)[1]
 
 
@@ -83,7 +83,8 @@ def data(dataset=None, description=False, estimates=False):
         return pd.read_csv(join(_get_path(__file__), "data/pwt_data.csv.bz2"), compression="bz2")
 
     elif (dataset=='pwt') & (description==True):
-        df = pd.read_csv('pwt_definitions.csv').iloc[:,[0,1]].dropna(subset=['Variable name']).set_index('Variable name')
+        df = pd.read_csv(join(_get_path(__file__), "data/pwt_definitions.csv")
+                ).iloc[:,[0,1]].dropna(subset=['Variable name']).set_index('Variable name')
         df.index.name = ''
         with pd.option_context('display.max_colwidth', None) and pd.option_context('display.max_rows', None):
             display(df)
