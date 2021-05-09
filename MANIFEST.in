@@ -1,2 +1,2 @@
 include *.rst
-recursive-include docs *.rst
+prune data_generation

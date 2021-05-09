@@ -1,4 +1,4 @@
-# `py4macro`
+# はじめに
 
 [「Pythonで学ぶ中級マクロ経済学」](https://py4macro.github.io)で使うモジュール。
 
@@ -9,12 +9,12 @@
     * IMF World Economic Outlook 2021
     * Maddison Project Database 2020
 
-## 使い方
+# 使い方
 ```
 import py4macro
 ```
 
-### Hodrick-Prescottフィルターによるトレンド
+## Hodrick-Prescottフィルターによるトレンド抽出
 
 ```
 py4macro.trend(s,lamb=1600)
@@ -33,7 +33,7 @@ Hodrick-Prescottフィルターで計算したtrend（トレンド）の`Series`
 
 `py4macro.trend(df.loc[:,'gdp'])`
 
-### ３つのデータ・セット
+## ３つのデータ・セット
 
 ```
 py4macro.data(dataset=None, description=False, estimates=False)
@@ -91,17 +91,17 @@ py4macro.data(dataset=None, description=False, estimates=False)
 `py4macro.data('weo',estimates=True)`
 
 
-## インストール方法
+# インストール方法
 ```
 pip install py4macro
 ```
 or
 ```
-pip install git+https://github.com/spring-haru/py4macro.git
+pip install git+https://github.com/Py4Macro/py4macro.git
 ```
 or
 ```
-git clone https://github.com/spring-haru/py4macro.git
+git clone https://github.com/Py4Macro/py4macro.git
 cd py4macro
 pip install .
 ```

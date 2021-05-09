@@ -1,7 +1,9 @@
-"""Module for datasets
-    * Penn World Tables 10.0
-    * IMF World Economic Outlook 2021
-    * Maddison Project Database 2020
+"""Module for 「Pythonで学ぶ中級マクロ経済学」
+    * HPフィルター関数
+    * データ・セット
+        * Penn World Tables 10.0
+        * IMF World Economic Outlook 2021
+        * Maddison Project Database 2020
 """
 from os.path import abspath, join, split
 import pandas as pd

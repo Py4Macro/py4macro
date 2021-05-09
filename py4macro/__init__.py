@@ -1,8 +1,6 @@
 # __init__.py
 
-"""
-Github page: https://github.com/spring-haru/py4macro
-"""
+# https://github.com/Py4Macro/py4macro.git
 
 from .py4macro import *
 
