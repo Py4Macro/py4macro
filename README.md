@@ -1,3 +1,6 @@
+[![PyPI version fury.io](https://badge.fury.io/py/py4macro.svg)](https://pypi.python.org/pypi/py4macro/)
+
+
 # はじめに
 
 [「Pythonで学ぶ中級マクロ経済学」](https://py4macro.github.io)で使うモジュール。

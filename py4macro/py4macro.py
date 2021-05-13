@@ -5,8 +5,7 @@ import pandas as pd
 # =============================================================================================
 
 def trend(s, lamb=1600):
-    """trend関数の説明
-
+    """
         引数:
             s: Seriesもしくは１列のDataFrameとし，行のラベルはDatetimeIndexとすること。
             lamb: 四半期用のデータでは通常の値（デフォルト：1600）
@@ -23,8 +22,7 @@ def trend(s, lamb=1600):
 
 
 def show(df):
-    """show関数の説明
-
+    """
         引数：DetaFrame
         戻り値：行・列ともに全て表示する。"""
 
@@ -50,7 +48,7 @@ def _mad_definitions():
 
 
 def data(dataset=None, description=0):
-    """data関数の説明
+    """
         引数：
             dataset: (文字列)
                 'pwt':   Penn World Table 10.0
@@ -62,8 +60,8 @@ def data(dataset=None, description=0):
                 0: データのDataFrameを返す
                 1: 変数の定義を全て表示する
                 2: 変数の定義のDataFrameを返す
-               -1: 何年以降から予測値なのかを全て示す(dataset='weo'場合にのみ有効)
-               -2: 何年以降から予測値なのかを示すDataFrameを返す(dataset='weo'場合にのみ有効)
+               -1: (dataset='weo'場合にのみ有効) 何年以降から予測値なのかを全て示す
+               -2: (dataset='weo'場合にのみ有効) 何年以降から予測値なのかを示すDataFrameを返す
 
         返り値：
             DataFrame もしくは DataFrameの表示
