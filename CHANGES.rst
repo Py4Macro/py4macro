@@ -1,3 +1,4 @@
+v0.2.1, 2021-05-21 -- Column names, added to the original PWT, are changed
 v0.2.0, 2021-05-10 -- DataFrameを全て表示するshow関数, 
                       変数の定義のDataFrame
                       Penn World Talbe is combined with regions, income groups, etc

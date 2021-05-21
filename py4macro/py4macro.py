@@ -5,15 +5,15 @@ import pandas as pd
 # =============================================================================================
 
 def trend(s, lamb=1600):
-    """
-        引数:
-            s: Seriesもしくは１列のDataFrameとし，行のラベルはDatetimeIndexとすること。
-            lamb: 四半期用のデータでは通常の値（デフォルト：1600）
-
-        返り値:
-            Hodrick-Prescott filterで計算したtrend（トレンド）のSeries
-
-        例: trend(df.loc[:,'gdp'])"""
+    """|
+       | 引数:
+       |     s: Seriesもしくは１列のDataFrameとし，行のラベルはDatetimeIndexとすること。
+       |     lamb: 四半期用のデータでは通常の値（デフォルト：1600）
+       |
+       | 返り値:
+       |     Hodrick-Prescott filterで計算したtrend（トレンド）のSeries
+       |
+       | 例: trend(df.loc[:,'gdp'])"""
 
     from statsmodels.tsa.filters.hp_filter import hpfilter
 
@@ -22,9 +22,9 @@ def trend(s, lamb=1600):
 
 
 def show(df):
-    """
-        引数：DetaFrame
-        戻り値：行・列ともに全て表示する。"""
+    """|
+       | 引数：DetaFrame
+       | 戻り値：行・列ともに全て表示する。"""
 
     with pd.option_context('display.max_colwidth', None, 'display.max_rows', None):
         display(df)
@@ -48,38 +48,68 @@ def _mad_definitions():
 
 
 def data(dataset=None, description=0):
-    """
-        引数：
-            dataset: (文字列)
-                'pwt':   Penn World Table 10.0
-                'weo':   IMF World Economic Outlook 2021
-                'mad':   country data of Maddison Project Database 2020
-                'mad-regions':   regional data of Maddison Project Database 2020
-
-            description (デフォルト：0, 整数型):
-                0: データのDataFrameを返す
-                1: 変数の定義を全て表示する
-                2: 変数の定義のDataFrameを返す
-               -1: (dataset='weo'場合にのみ有効) 何年以降から予測値なのかを全て示す
-               -2: (dataset='weo'場合にのみ有効) 何年以降から予測値なのかを示すDataFrameを返す
-
-        返り値：
-            DataFrame もしくは DataFrameの表示
-
-        例１：py4macro.data('weo')
-                -> IMF World Economic OutlookのDataFrameを返す。
-
-        例２：py4macro.data('weo', description=1)
-                -> IMF World Economic Outlookの変数定義の全てを表示する。
-
-        例３：py4macro.data('weo', description=2)
-                -> IMF World Economic Outlookの変数定義のDataFrameを返す。
-
-        例４：py4macro.data('weo', description=-1)
-                -> IMF World Economic Outlookの変数の推定値の開始年を全て表示する。
-
-        例５：py4macro.data('weo', description=-2)
-                -> IMF World Economic Outlookの変数の推定値の開始年のDataFrameを返す。"""
+    """|
+       | 引数：
+       |     dataset: (文字列)
+       |         'pwt':   Penn World Table 10.0
+       |         'weo':   IMF World Economic Outlook 2021
+       |         'mad':   country data of Maddison Project Database 2020
+       |         'mad-regions':   regional data of Maddison Project Database 2020
+       |
+       |     description (デフォルト：0, 整数型):
+       |         0: データのDataFrameを返す
+       |         1: 変数の定義を全て表示する
+       |         2: 変数の定義のDataFrameを返す
+       |        -1: (dataset='weo'場合にのみ有効) 何年以降から予測値なのかを全て示す
+       |        -2: (dataset='weo'場合にのみ有効) 何年以降から予測値なのかを示すDataFrameを返す
+       |
+       | 返り値：
+       |     DataFrame もしくは DataFrameの表示
+       |
+       | 例１：py4macro.data('weo')
+       |         -> IMF World Economic OutlookのDataFrameを返す。
+       |
+       | 例２：py4macro.data('weo', description=1)
+       |         -> IMF World Economic Outlookの変数定義の全てを表示する。
+       |
+       | 例３：py4macro.data('weo', description=2)
+       |         -> IMF World Economic Outlookの変数定義のDataFrameを返す。
+       |
+       | 例４：py4macro.data('weo', description=-1)
+       |         -> IMF World Economic Outlookの変数の推定値の開始年を全て表示する。
+       |
+       | 例５：py4macro.data('weo', description=-2)
+       |         -> IMF World Economic Outlookの変数の推定値の開始年のDataFrameを返す。
+       |
+       |
+       | ----- Penn World Tableについて ---------------------------------------------
+       |
+       | PWTには以下の列が追加されている。
+       |
+       | * oecd：1990年代に始まった中央ヨーロッパへの拡大前にOECDメンバー国であれば1，そうでなければ0
+       |
+       | * income_group：世界銀行が所得水準に従って分けた４つのグループ
+       |         High income
+       |         Upper middle income
+       |         Lower middle income
+       |         Low income
+       |
+       | * region：世界銀行が国・地域に従って分けた７つのグループ化
+       |         East Asia & Pacific
+       |         Europe & Central Asia
+       |         Latin America & Caribbean
+       |         Middle East & North Africa
+       |         North America
+       |         South Asia
+       |         Sub-Saharan Africa
+       |
+       | * region：南極以外の6大陸
+       |         Africa
+       |         Asia
+       |         Australia
+       |         Europe
+       |         North America
+       |         South America"""
 
 
     if dataset not in ['pwt','weo','mad','mad-regions']:
