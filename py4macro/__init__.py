@@ -7,7 +7,7 @@ from .py4macro import *
 __all__ = ['data','trend','show']
 
 __author__ = 'Tetsu Haruyama'
-__version__ = '0.2.1'
+__version__ = '0.3.1'
 __copyright__ = 'Copyright (c) 2021 Tetsu Haruyama'
 
 __doc__ = """
@@ -18,4 +18,5 @@ __doc__ = """
         * データ・セット
             * Penn World Tables 10.0
             * IMF World Economic Outlook 2021
-            * Maddison Project Database 2020"""
+            * Maddison Project Database 2020
+            * Japan's quarterly data"""

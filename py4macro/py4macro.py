@@ -2,7 +2,74 @@ from os.path import abspath, join, split
 import pandas as pd
 
 
-# =============================================================================================
+# ===== Definitions =========================================================================
+
+jpn_q_definitions="""
+    | `gdp`: 国内総生産（GDP）
+    | `consumption`: 消費 
+    | `investment`: 投資 
+    | `government`: 政府支出
+    | `exports`: 輸出
+    | `imports`: 輸入
+    | `capital`: 資本ストック
+    | `employed`: 就業者数
+    | `unemployed`: 失業者数
+    | `unemployment_rate`: 失業率
+    | `hours`: 労働者一人当たり月平均労働時間
+    | `total_hours`: 月平均総労働時間（`employed`X`hours`）
+    | `inflation`: インフレ率
+    |
+    | ＜参考＞
+    | GDPとその構成要素
+    |    * 1994年Q1~2019年Q4
+    |        * 実額・四半期・実質季節調整系列（年換算）
+    |        * 2011暦年（平成23年）連鎖価格
+    |        * 単位：10億円
+    |    * 1980年Q1~1993年Q4
+    |        * 実額・四半期・実質季節調整系列（年換算）
+    |        * 平成23年基準支出側GDP系列簡易遡及（参考系列であり上のデータと接続可能）
+    |        * 単位：10億円
+    |
+    | 実質資本ストック
+    |   * 1994年Q1~2019年Q4
+    |       * 平成23年基準
+    |       * 単位：10億円
+    |   * 1980年Q1~1993年Q4
+    |        * 平成23年基準遡及系列
+    |        * 単位：10億円
+    |
+    | 就業者数，失業者数，失業率
+    |   * 総務省「労働力調査」
+    |   * 単位：万人
+    |
+    | 労働者一人当たり月平均労働時間
+    |   * 厚生労働省「毎月勤労統計調査」
+    |   * 30 人以上(一般・パート)、月間実労働時間(総実労働時間)
+    |   * 2015年の平均を100に基準化
+    |
+    | インフレ率
+    |   * 景気動向指数（速報、改訂値）（月次）から計算"""
+
+
+
+
+# ===== Helper functions =======================================================================
+
+def _get_path(f):
+    return split(abspath(f))[0]
+
+
+def _mad_definitions():
+
+    df = pd.read_csv(join(_get_path(__file__), "data/mad_definitions.csv")).iloc[[16,17,18],[0,1]]
+    df.columns = ['vars','Definitions']
+    df = df.set_index('vars')
+    df.index.name = ''
+
+    return df
+
+
+# ===== Main functions ==========================================================================
 
 def trend(s, lamb=1600):
     """|
@@ -30,22 +97,6 @@ def show(df):
         display(df)
 
 
-# =============================================================================================
-
-def _get_path(f):
-    return split(abspath(f))[0]
-
-
-def _mad_definitions():
-
-    df = pd.read_csv(join(_get_path(__file__), "data/mad_definitions.csv")).iloc[[16,17,18],[0,1]]
-    df.columns = ['vars','Definitions']
-    df = df.set_index('vars')
-    df.index.name = ''
-
-    return df
-
-
 
 def data(dataset=None, description=0):
     """|
@@ -55,13 +106,19 @@ def data(dataset=None, description=0):
        |         'weo':   IMF World Economic Outlook 2021
        |         'mad':   country data of Maddison Project Database 2020
        |         'mad-regions':   regional data of Maddison Project Database 2020
+       |         'jpn-q': Japan's quarterly data
        |
        |     description (デフォルト：0, 整数型):
        |         0: データのDataFrameを返す
+       |            * 全てのデータセット
        |         1: 変数の定義を全て表示する
+       |            * 全てのデータセット
        |         2: 変数の定義のDataFrameを返す
-       |        -1: (dataset='weo'場合にのみ有効) 何年以降から予測値なのかを全て示す
-       |        -2: (dataset='weo'場合にのみ有効) 何年以降から予測値なのかを示すDataFrameを返す
+       |            * `'pwt'`，`'weo'``'mad'`のみ
+       |        -1: 何年以降から予測値なのかを全て示す
+       |            * `'weo'`のみ
+       |        -2: 何年以降から予測値なのかを示すDataFrameを返す
+       |            * `'weo'`のみ
        |
        | 返り値：
        |     DataFrame もしくは DataFrameの表示
@@ -112,13 +169,14 @@ def data(dataset=None, description=0):
        |         South America"""
 
 
-    if dataset not in ['pwt','weo','mad','mad-regions']:
+    if dataset not in ['pwt','weo','mad','mad-regions','jpn-q']:
         try:
             raise ValueError("""次の内１つを選んでください。
     'pwt': Penn World Table 10.0
     'weo': IMF World Economic Outlook 2021
     'mad': country data of Maddison Project Database 2020
-    'mad-regions': regional data of Maddison Project Database 2020""")
+    'mad-regions': regional data of Maddison Project Database 2020
+    'jpn-q': Japan's quarterly data""")
         except ValueError as e:
             print(e)
 
@@ -263,6 +321,23 @@ def data(dataset=None, description=0):
 
 
     elif (dataset=='mad-regions') & (description not in [0,1]):
+        try:
+            raise ValueError("""descriptionに次の内１つを選んでください。
+    0: データのDataFrame
+    1: 変数の定義を表示""")
+        except ValueError as e:
+            print(e)
+
+    # Japan's quarterly data -------------------------------------------------------------
+    elif (dataset=='jpn-q') & (description==0):
+        df = pd.read_csv(join(_get_path(__file__), "data/jpn_quarterly.csv.bz2"), index_col='index', parse_dates=True, compression="bz2")
+        df.index.name = ''
+        return df
+
+    elif (dataset=='jpn-q') & (description==1):
+        print(jpn_q_definitions)
+
+    elif (dataset=='jpn-q') & (description not in [0,1]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame

@@ -9,7 +9,7 @@ for filename in glob.iglob('./py4macro/**', recursive=True):
 
 setup(
     name='py4macro',
-    version='0.2.1',
+    version='0.3.1',
     author='Tetsu Haruyama',
     author_email='haruyama@econ.kobe-u.ac.jp',
     packages=find_packages(exclude=("data_generation",)),
@@ -22,5 +22,5 @@ setup(
     description='Module for py4macro.github.io',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    keywords=['data', 'Penn World Table', 'IMF World Economic Outlook', 'Maddison Project', 'Hodrick-Prescott filter']
+    keywords=['data', 'Penn World Table', 'IMF World Economic Outlook', 'Maddison Project', 'Hodrick-Prescott filter', 'Japan']
 )

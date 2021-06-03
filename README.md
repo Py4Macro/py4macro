@@ -12,6 +12,7 @@
     * Penn World Tables 10.0
     * IMF World Economic Outlook 2021
     * Maddison Project Database 2020
+    * Japan's quarterly data
 
 # 使い方
 ```
@@ -63,13 +64,19 @@ py4macro.data(dataset=None, description=0)
     * `'weo'`:   IMF World Economic Outlook 2021
     * `'mad'`:   country data of Maddison Project Database 2020
     * `'mad-regions'`:   regional data of Maddison Project Database 2020
+    * `'jpn-q'`: Japan's quarterly data
 
 * `description` (デフォルト：`0`, 整数型):
     * `0`: データのDataFrameを返す
+        * 全てのデータセット
     * `1`: 変数の定義を全て表示する
+        * 全てのデータセット
     * `2`: 変数の定義のDataFrameを返す
-    * `-1`: 何年以降から予測値なのかを全て示す(`dataset='weo'`場合にのみ有効)
-    * `-2`: 何年以降から予測値なのかを示すDataFrameを返す(`dataset='weo'`場合にのみ有効)
+        * `'pwt'`，`'weo'``'mad'`のみ
+    * `-1`: 何年以降から予測値なのかを全て示す
+        * `'weo'`のみ
+    * `-2`: 何年以降から予測値なのかを示すDataFrameを返す
+        * `'weo'`のみ
 
 **返り値**：
     `DataFrame`もしくは`DataFrame`の表示
