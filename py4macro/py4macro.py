@@ -80,7 +80,7 @@ def trend(s, lamb=1600):
        | 返り値:
        |     Hodrick-Prescott filterで計算したtrend（トレンド）のSeries
        |
-       | 例: trend(df.loc[:,'gdp'])"""
+       | 例: py4macro.trend(df.loc[:,'gdp'])"""
 
     from statsmodels.tsa.filters.hp_filter import hpfilter
 
@@ -91,7 +91,10 @@ def trend(s, lamb=1600):
 def show(df):
     """|
        | 引数：DetaFrame
-       | 戻り値：行・列ともに全て表示する。"""
+       |
+       | 戻り値：行・列ともに全て表示する。
+       |
+       | 例：py4macro.show(＜DataFrame＞)"""
 
     with pd.option_context('display.max_colwidth', None, 'display.max_rows', None):
         display(df)
