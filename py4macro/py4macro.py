@@ -6,8 +6,8 @@ import pandas as pd
 
 jpn_q_definitions="""
     | `gdp`: 国内総生産（GDP）
-    | `consumption`: 消費 
-    | `investment`: 投資 
+    | `consumption`: 消費
+    | `investment`: 投資
     | `government`: 政府支出
     | `exports`: 輸出
     | `imports`: 輸入
@@ -19,24 +19,28 @@ jpn_q_definitions="""
     | `total_hours`: 月平均総労働時間（`employed`X`hours`）
     | `inflation`: インフレ率
     |
-    | ＜参考＞
+    | ＜出典＞
     | GDPとその構成要素
     |    * 1994年Q1~2019年Q4
     |        * 実額・四半期・実質季節調整系列（年換算）
     |        * 2011暦年（平成23年）連鎖価格
     |        * 単位：10億円
+    |        * 国民経済計算（GDP統計）
     |    * 1980年Q1~1993年Q4
     |        * 実額・四半期・実質季節調整系列（年換算）
     |        * 平成23年基準支出側GDP系列簡易遡及（参考系列であり上のデータと接続可能）
     |        * 単位：10億円
+    |        * 国民経済計算（GDP統計）
     |
     | 実質資本ストック
     |   * 1994年Q1~2019年Q4
-    |       * 平成23年基準
-    |       * 単位：10億円
+    |        * 平成23年基準
+    |        * 単位：10億円
+    |        * 国民経済計算（GDP統計）
     |   * 1980年Q1~1993年Q4
     |        * 平成23年基準遡及系列
     |        * 単位：10億円
+    |        * 国民経済計算（GDP統計）
     |
     | 就業者数，失業者数，失業率
     |   * 総務省「労働力調査」
@@ -50,8 +54,35 @@ jpn_q_definitions="""
     | インフレ率
     |   * 景気動向指数（速報、改訂値）（月次）から計算"""
 
+jpn_money_definitions="""
+    | `cpi`: 消費者物価指数
+    | `money`: マネーストック（M1）
+    |
+    | * 行ラベル：四半期の最終日
+    |
+    | ＜出典＞
+    | International Monetary Fund"""
 
-
+world_money_definitions="""
+    | `iso`: ISO国名コード
+    | `country`: 国名
+    | `year`: 年
+    | `income_group`: 世界銀行が定義する所得グループ
+    |   * High income
+    |   * Upper Middle income
+    |   * Lower Middle income
+    |   * Low income
+    | `money`: マネーストック（M1）
+    | `deflator`: GDPディフレーター
+    |
+    | ＜注意点＞
+    | * `money`と`deflator`が10年間以上連続で欠損値がない経済（177ヵ国）のみが含まれている。
+    | * 国によって含まれるデータの`year`が異なる。
+    | * 所得グループに関する情報
+    |   https://datahelpdesk.worldbank.org/knowledgebase/articles/906519-world-bank-country-and-lending-groups
+    |
+    | ＜出典＞
+    | World Bank Development Indicators"""
 
 # ===== Helper functions =======================================================================
 
@@ -109,7 +140,9 @@ def data(dataset=None, description=0):
        |         'weo':   IMF World Economic Outlook 2021
        |         'mad':   country data of Maddison Project Database 2020
        |         'mad-regions':   regional data of Maddison Project Database 2020
-       |         'jpn-q': Japan's quarterly data
+       |         'jpn-q': 日本の四半期データ（GDPなど）
+       |         'jpn-money': 日本の四半期データ（マネーストックなど）
+       |         'world-money': 177ヵ国のマネーストックなど
        |
        |     description (デフォルト：0, 整数型):
        |         0: データのDataFrameを返す
@@ -172,14 +205,16 @@ def data(dataset=None, description=0):
        |         South America"""
 
 
-    if dataset not in ['pwt','weo','mad','mad-regions','jpn-q']:
+    if dataset not in ['pwt','weo','mad','mad-regions','jpn-q','jpn-money','world-money']:
         try:
             raise ValueError("""次の内１つを選んでください。
     'pwt': Penn World Table 10.0
     'weo': IMF World Economic Outlook 2021
     'mad': country data of Maddison Project Database 2020
     'mad-regions': regional data of Maddison Project Database 2020
-    'jpn-q': Japan's quarterly data""")
+    'jpn-q': 日本の四半期データ（GDPなど）
+    'jpn-money': 日本の四半期データ（マネーストックなど）
+    'world-money': 177ヵ国のマネーストックなど""")
         except ValueError as e:
             print(e)
 
@@ -331,7 +366,7 @@ def data(dataset=None, description=0):
         except ValueError as e:
             print(e)
 
-    # Japan's quarterly data -------------------------------------------------------------
+    # 日本の四半期データ（GDPなど）-------------------------------------------------------
     elif (dataset=='jpn-q') & (description==0):
         df = pd.read_csv(join(_get_path(__file__), "data/jpn_quarterly.csv.bz2"), index_col='index', parse_dates=True, compression="bz2")
         df.index.name = ''
@@ -348,5 +383,39 @@ def data(dataset=None, description=0):
         except ValueError as e:
             print(e)
 
+    # 日本の四半期データ（マネーストックなど）-----------------------------------------
+    elif (dataset=='jpn-money') & (description==0):
+        df = pd.read_csv(join(_get_path(__file__), "data/jpn_money.csv.bz2"), index_col='date', parse_dates=True, compression="bz2")
+        df.index.name = ''
+        return df
+
+    elif (dataset=='jpn-money') & (description==1):
+        print(jpn_money_definitions)
+
+    elif (dataset=='jpn-money') & (description not in [0,1]):
+        try:
+            raise ValueError("""descriptionに次の内１つを選んでください。
+    0: データのDataFrame
+    1: 変数の定義を表示""")
+        except ValueError as e:
+            print(e)
+
+    # 177ヵ国のマネーストックなど -----------------------------------------------------
+    elif (dataset=='world-money') & (description==0):
+        df = pd.read_csv(join(_get_path(__file__), "data/world_money.csv.bz2"), compression="bz2")
+        return df
+
+    elif (dataset=='world-money') & (description==1):
+        print(world_money_definitions)
+
+    elif (dataset=='world-money') & (description not in [0,1]):
+        try:
+            raise ValueError("""descriptionに次の内１つを選んでください。
+    0: データのDataFrame
+    1: 変数の定義を表示""")
+        except ValueError as e:
+            print(e)
+
+    # Otherwise ------------------------------------------------------------------------
     else:
         pass

@@ -13,7 +13,9 @@
     * Penn World Tables 10.0
     * IMF World Economic Outlook 2021
     * Maddison Project Database 2020
-    * Japan's quarterly data
+    * 日本の四半期データ（GDPなど）
+    * 日本の四半期データ（マネーストックなど）
+    * 177ヵ国のマネーストックなど
 
 # 使い方
 ```
@@ -52,7 +54,7 @@ py4macro.show(df)
 `DataFrame`の表示のみ
 
 
-## ３つのデータ・セット
+## データ・セット
 
 ```
 py4macro.data(dataset=None, description=0)
@@ -65,7 +67,10 @@ py4macro.data(dataset=None, description=0)
     * `'weo'`:   IMF World Economic Outlook 2021
     * `'mad'`:   country data of Maddison Project Database 2020
     * `'mad-regions'`:   regional data of Maddison Project Database 2020
-    * `'jpn-q'`: Japan's quarterly data
+    * `'jpn-q'`: 日本の四半期データ（GDPなど）
+    * `'jpn-money'`: 日本の四半期データ（マネーストックなど）
+    * `'world-money'`: 177ヵ国のマネーストックなど
+
 
 * `description` (デフォルト：`0`, 整数型):
     * `0`: データのDataFrameを返す
