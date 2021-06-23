@@ -11,7 +11,7 @@ __version__ = '0.4.0'
 __copyright__ = 'Copyright (c) 2021 Tetsu Haruyama'
 
 __doc__ = """
-    「Pythonで学ぶ中級マクロ経済学」のためのモジュール
+    「Pythonで学ぶマクロ経済学 (中級＋α)」のためのモジュール
 
         * HPフィルター関数
         * DataFrameを全て表示するshow関数

@@ -4,7 +4,7 @@
 
 # はじめに
 
-[「Pythonで学ぶ中級マクロ経済学」](https://py4macro.github.io)で使うモジュール。
+[「Pythonで学ぶマクロ経済学 (中級＋<i>&alpha;</i>)」](https://py4macro.github.io)で使うモジュール。
 
 以下が含まれている。
 * Hodrick-Prescottフィルターを使い時系列データのトレンドを返す関数
