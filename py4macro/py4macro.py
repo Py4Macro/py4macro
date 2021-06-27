@@ -84,6 +84,27 @@ world_money_definitions="""
     | ＜出典＞
     | World Bank Development Indicators"""
 
+
+ex_definitions="""
+    | `real_ex_geus_%change`: 独マルク/米ドル実質為替レート変動率（％）
+    |                           * 月次，季節調整ない
+    | `real_ex_jpus_%change`: 円/米ドル実質為替レート変動率（％）
+    |                           * 月次，季節調整ない
+    | `real_ex_jpus`:         円/米ドル実質為替レート
+    |                           * 月次，季節調整ない
+    | `ex_jpus`:              円/米ドル名目為替レート
+    |                           * 月次，季節調整ない
+    | `relative_p_jpus`:      日本の一般物価水準に対しての米国の一般物価水準の比率
+    |                           * 日本のCPI分の米国のCPI
+    |                           * 2015年CPI=100
+    |                           * 月次，季節調整ない
+    |
+    | * 期間：1960年1月〜
+    |
+    | ＜出典＞
+    | OECD Main Economic Indicators"""
+
+
 # ===== Helper functions =======================================================================
 
 def _get_path(f):
@@ -143,6 +164,7 @@ def data(dataset=None, description=0):
        |         'jpn-q': 日本の四半期データ（GDPなど）
        |         'jpn-money': 日本の四半期データ（マネーストックなど）
        |         'world-money': 177ヵ国のマネーストックなど
+       |         'ex': 円/ドル為替レートなど
        |
        |     description (デフォルト：0, 整数型):
        |         0: データのDataFrameを返す
@@ -205,7 +227,7 @@ def data(dataset=None, description=0):
        |         South America"""
 
 
-    if dataset not in ['pwt','weo','mad','mad-regions','jpn-q','jpn-money','world-money']:
+    if dataset not in ['pwt','weo','mad','mad-regions','jpn-q','jpn-money','world-money','ex']:
         try:
             raise ValueError("""次の内１つを選んでください。
     'pwt': Penn World Table 10.0
@@ -214,7 +236,8 @@ def data(dataset=None, description=0):
     'mad-regions': regional data of Maddison Project Database 2020
     'jpn-q': 日本の四半期データ（GDPなど）
     'jpn-money': 日本の四半期データ（マネーストックなど）
-    'world-money': 177ヵ国のマネーストックなど""")
+    'world-money': 177ヵ国のマネーストックなど
+    'ex': 円/ドル為替レートなど""")
         except ValueError as e:
             print(e)
 
@@ -409,6 +432,23 @@ def data(dataset=None, description=0):
         print(world_money_definitions)
 
     elif (dataset=='world-money') & (description not in [0,1]):
+        try:
+            raise ValueError("""descriptionに次の内１つを選んでください。
+    0: データのDataFrame
+    1: 変数の定義を表示""")
+        except ValueError as e:
+            print(e)
+
+    # 円/ドル為替レートなど -----------------------------------------------------
+    elif (dataset=='ex') & (description==0):
+        df = pd.read_csv(join(_get_path(__file__), "data/real_ex_rate.csv.bz2"), index_col='index', parse_dates=True, compression="bz2")
+        df.index.name = ''
+        return df
+
+    elif (dataset=='ex') & (description==1):
+        print(ex_definitions)
+
+    elif (dataset=='ex') & (description not in [0,1]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame

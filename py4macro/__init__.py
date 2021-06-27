@@ -7,7 +7,7 @@ from .py4macro import *
 __all__ = ['data','trend','show']
 
 __author__ = 'Tetsu Haruyama'
-__version__ = '0.4.0'
+__version__ = '0.5.0'
 __copyright__ = 'Copyright (c) 2021 Tetsu Haruyama'
 
 __doc__ = """
@@ -21,4 +21,5 @@ __doc__ = """
             * Maddison Project Database 2020
             * 日本の四半期データ（GDPなど）
             * 日本の四半期データ（マネーストックなど）
-            * 177ヵ国のマネーストックなど"""
+            * 177ヵ国のマネーストックなど
+            * 円/ドル為替レート"""

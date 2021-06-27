@@ -9,7 +9,7 @@ for filename in glob.iglob('./py4macro/**', recursive=True):
 
 setup(
     name='py4macro',
-    version='0.4.0',
+    version='0.5.0',
     author='Tetsu Haruyama',
     author_email='haruyama@econ.kobe-u.ac.jp',
     packages=find_packages(exclude=("data_generation",)),
@@ -19,7 +19,7 @@ setup(
     install_requires=['pandas','statsmodels'],
     url='https://github.com/Py4Macro/py4macro',
     license='MIT',
-    description='Module for py4macro.github.io',
+    description='A module for py4macro.github.io',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     keywords=['data', 'Penn World Table', 'IMF World Economic Outlook', 'Maddison Project', 'Hodrick-Prescott filter', 'Japan']
