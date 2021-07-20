@@ -9,14 +9,14 @@ for filename in glob.iglob('./py4macro/**', recursive=True):
 
 setup(
     name='py4macro',
-    version='0.5.0',
+    version='0.5.1',
     author='Tetsu Haruyama',
     author_email='haruyama@econ.kobe-u.ac.jp',
     packages=find_packages(exclude=("data_generation",)),
     package_dir={'py4macro': './py4macro'},
     include_package_data=True,
     package_data={'py4macro': additional_files},
-    install_requires=['pandas','statsmodels'],
+    install_requires=['pandas'],
     url='https://github.com/Py4Macro/py4macro',
     license='MIT',
     description='A module for py4macro.github.io',
