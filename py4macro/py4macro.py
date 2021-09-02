@@ -286,6 +286,7 @@ def data(dataset=None, description=0):
                                                                                            'ISO':'countrycode'}
                                                                          ).sort_values(['countrycode','year'])
         df.columns.name = ''
+        df['year'] = df['year'].astype(int)
 
         return df
 
