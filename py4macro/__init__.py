@@ -7,11 +7,11 @@ from .py4macro import *
 __all__ = ['data','trend','show']
 
 __author__ = 'Tetsu Haruyama'
-__version__ = '0.5.2'
-__copyright__ = 'Copyright (c) 2021 Tetsu Haruyama'
+__version__ = '0.6.0'
+__copyright__ = 'Copyright (c) 2022 Tetsu Haruyama'
 
 __doc__ = """
-    「Pythonで学ぶマクロ経済学 (中級＋α)」のためのモジュール
+    「Pythonで学ぶマクロ経済学 (中級＋レベル)」のためのモジュール
 
         * HPフィルター関数
         * DataFrameを全て表示するshow関数
