@@ -1,5 +1,5 @@
 [![PyPI version fury.io](https://badge.fury.io/py/py4macro.svg)](https://pypi.python.org/pypi/py4macro/)
-[![PyPI - Downloads]](https://img.shields.io/pypi/dm/py4macro?style=flat-square)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/py4macro)
 [![CodeQL](https://github.com/Py4Macro/py4macro/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Py4Macro/py4macro/actions?query=workflow%codeql-analysis)
 
 
