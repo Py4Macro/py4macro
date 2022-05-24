@@ -8,8 +8,8 @@
 [Pythonで学ぶマクロ経済学 (中級＋レベル)](https://py4macro.github.io)で使うモジュール。
 
 以下が含まれている。
-* Hodrick-Prescottフィルターを使い時系列データのトレンドを返す関数
-* DataFrameを全て表示するshow関数
+* Hodrick-Prescottフィルターを使い時系列データのトレンドを返す`trend`関数
+* DataFrameを全て表示する`show`関数
 * データ・セット
     * Penn World Tables 10.0
     * IMF World Economic Outlook 2021
@@ -70,7 +70,7 @@ py4macro.data(dataset=None, description=0)
     * `'mad'`:   country data of Maddison Project Database 2020
     * `'mad-regions'`:   regional data of Maddison Project Database 2020
     * `'jpn-q'`: 日本の四半期データ（GDPなど）
-    * `'jpn-money'`: 日本の四半期データ（マネーストックなど）
+    * `'jpn-money'`: 日本の月次データ（CPIとマネーストック）
     * `'world-money'`: 177ヵ国のマネーストックなど
     * `'ex'`: 円/ドル為替レートなど
 

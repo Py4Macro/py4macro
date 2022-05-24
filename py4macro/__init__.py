@@ -7,7 +7,7 @@ from .py4macro import *
 __all__ = ['data','trend','show']
 
 __author__ = 'Tetsu Haruyama'
-__version__ = '0.6.0'
+__version__ = '0.6.1'
 __copyright__ = 'Copyright (c) 2022 Tetsu Haruyama'
 
 __doc__ = """

@@ -19,6 +19,8 @@ jpn_q_definitions="""
     | `total_hours`: 月平均総労働時間（`employed`X`hours`）
     | `inflation`: インフレ率
     |
+    | * 四半期データ
+    |
     | ＜出典＞
     | GDPとその構成要素
     |    * 1994年Q1~2021年Q4
@@ -56,12 +58,18 @@ jpn_q_definitions="""
 
 jpn_money_definitions="""
     | `cpi`: 消費者物価指数
+    |   * 2015年の値を`100`
+    |   * 季節調整済み
     | `money`: マネーストック（M1）
+    |   * 2015年の値を`100`
+    |   * 季節調整済み
     |
-    | * 行ラベル：四半期の最終日
+    | * 月次データ
+    | * 1955年1月〜2021年12月
+    | * 行ラベル：毎月の最終日
     |
     | ＜出典＞
-    | International Monetary Fund"""
+    | OECD Main Economic Indicators"""
 
 world_money_definitions="""
     | `iso`: ISO国名コード
@@ -74,6 +82,8 @@ world_money_definitions="""
     |   * Low income
     | `money`: マネーストック（M1）
     | `deflator`: GDPディフレーター
+    |
+    | * 年次データ
     |
     | ＜注意点＞
     | * `money`と`deflator`が10年間以上連続で欠損値がない経済（177ヵ国）のみが含まれている。
@@ -99,6 +109,7 @@ ex_definitions="""
     |                           * 2015年CPI=100
     |                           * 月次，季節調整ない
     |
+    | * 月次データ
     | * 期間：1960年1月〜
     |
     | ＜出典＞
