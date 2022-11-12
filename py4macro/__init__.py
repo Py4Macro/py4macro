@@ -4,10 +4,10 @@
 
 from .py4macro import *
 
-__all__ = ['data','trend','show']
+__all__ = ['data','trend','show','xvalues']
 
 __author__ = 'Tetsu Haruyama'
-__version__ = '0.7.0'
+__version__ = '0.8.0'
 __copyright__ = 'Copyright (c) 2022 Tetsu Haruyama'
 
 __doc__ = """

@@ -25,7 +25,6 @@ import py4macro
 ```
 
 ## Hodrick-Prescottフィルターによるトレンド抽出
-
 ```
 py4macro.trend(s,lamb=1600)
 ```
@@ -44,7 +43,7 @@ Hodrick-Prescottフィルターで計算したtrend（トレンド）の`Series`
 `py4macro.trend(df.loc[:,'gdp'])`
 
 
-## DataFrameの行・列を全て表示する
+## `DataFrame`の行・列を全て表示する
 ```
 py4macro.show(df)
 ```
@@ -54,6 +53,26 @@ py4macro.show(df)
 **返り値**：
 
 `DataFrame`の表示のみ
+
+
+## `n`個の数値から構成されるリストを作成する
+```
+py4macro.xvalues(l, h, n)
+```
+**引数**：
+* `l`：最小値
+* `h`：最大値
+* `n`：要素数
+
+**返り値**：
+
+`n`個の浮動小数点数のリスト
+
+**例**:
+
+`py4macro.xvalues(-1, 1, 5)`
+
+>>> [-1.0, -0.5, 0.0, 0.5, 1.0]
 
 
 ## データ・セット

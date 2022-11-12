@@ -20,6 +20,8 @@ jpn_q_definitions="""
     | `inflation`: インフレ率
     | `price`: 消費者物価指数
     | `deflator`: GDPデフレーター
+    | `recession_start`: 景気循環の山の四半期基準日付
+    | `recession_end`: 景気循環の谷の四半期基準日付
     |
     | * 四半期データ
     |
@@ -56,7 +58,7 @@ jpn_q_definitions="""
     |   * 2020年の平均を100に基準化
     |
     | インフレ率
-    |   * 景気動向指数（速報、改訂値）（月次）から計算
+    |   * 景気動向指数（速報、改訂値）（月次）から四半期平均として計算
     |
     | 消費者物価指数
     |   * 2020年基準
@@ -68,7 +70,11 @@ jpn_q_definitions="""
     |       * 季節調整系列
     |   * 1980年Q1~1993年Q4
     |       * 2015年（平成27年）基準遡及系列
-    |       * 季節調整系列"""
+    |       * 季節調整系列
+    |
+    | 景気循環日付（四半期）
+    |   * 内閣府
+    |   * https://www.esri.cao.go.jp/jp/stat/di/hiduke.html"""
 
 jpn_money_definitions="""
     | `cpi`: 消費者物価指数
@@ -147,6 +153,22 @@ def _mad_definitions():
 
 
 # ===== Main functions ==========================================================================
+
+def xvalues(l, h, n):
+    """引数
+        l：最小値（lowest value）
+        h：最大値（highest value）
+        n：作成する数値の数を指定する（正の整数型，number of values）
+    戻り値
+        n個の要素から構成されるリスト"""
+    
+    if ( n<=1 ) or ( not isinstance(n, int) ):
+        raise Exception(f"引数 n には2以上の整数型を使う必要があります。n={n}となっています。")
+    elif l>=h:
+        raise Exception(f"引数 l と h の値では l>h もしくは l=h となります。l<h となるように値を設定し直してください。")
+    else:
+        return [l + x*(h-l)/(n-1) for x in range(n)]
+
 
 def trend(s, lamb=1600):
     """|
