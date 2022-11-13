@@ -8,8 +8,10 @@
 [Pythonで学ぶマクロ経済学 (中級＋レベル)](https://py4macro.github.io)で使うモジュール。
 
 以下が含まれている。
-* Hodrick-Prescottフィルターを使い時系列データのトレンドを返す`trend`関数
-* DataFrameを全て表示する`show`関数
+* Hodrick-Prescottフィルターを使い時系列データのトレンドを返す`trend()`関数
+* DataFrameを全て表示する`show()`関数
+* `n`個の浮動小数点数から構成されるリストを返す`xvalues()`関数
+* 後退期間にグレーの塗りつぶしを追加する`@recessions`デコレーター
 * データ・セット
     * Penn World Tables 10.0
     * IMF World Economic Outlook 2021
@@ -18,6 +20,7 @@
     * 日本の四半期データ（マネーストックなど）
     * 177ヵ国のマネーストックなど
     * 円/ドル為替レートなど
+    * 景気循環日付と拡張・後退期間
 
 # 使い方
 ```
@@ -74,6 +77,55 @@ py4macro.xvalues(l, h, n)
 
 ```
 >>> [-1.0, -0.5, 0.0, 0.5, 1.0]
+```
+
+
+## 横軸に`DatetimeIndex`を使うプロットに対して後退期間にグレーの塗りつぶしを追加するデコレーター
+```
+@recessions
+＜関数＞
+```
+
+＜例１：一つの図をプロット（軸を返さない）＞
+```
+@recessions
+def plot():
+    <DataFrame もしくは Series>.plot()
+```
+
+＜例２：一つの図をプロット（軸を返す）＞
+```
+@recessions
+def plot():
+    ax = <DataFrame もしくは Series>.plot()
+    return ax
+```
+
+＜例３：一つの図をプロット＞
+```
+@recessions
+def plot():
+    fig, ax = plt.subplots()
+    ax.plot(...)
+    return ax       # 省略すると軸を返さない
+```
+
+＜例４：複数の図をプロット＞
+```
+@recessions
+def plot():
+    ax = <DataFrame>.plot(subplots=True, layout=(2,2))
+    return ax       # この行は必須
+```
+
+＜例５：複数の図をプロット＞
+```
+@recessions
+def plot():
+    fig, ax = plt.subplots(2, 1)
+    ax[0].plot(...)
+    ax[1].plot(...)
+    return ax       # この行は必須
 ```
 
 

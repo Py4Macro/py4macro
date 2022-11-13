@@ -1,5 +1,7 @@
-from os.path import abspath, join, split
+import functools
+import numpy as np
 import pandas as pd
+from os.path import abspath, join, split
 
 
 # ===== Definitions =========================================================================
@@ -20,8 +22,6 @@ jpn_q_definitions="""
     | `inflation`: インフレ率
     | `price`: 消費者物価指数
     | `deflator`: GDPデフレーター
-    | `recession_start`: 景気循環の山の四半期基準日付
-    | `recession_end`: 景気循環の谷の四半期基準日付
     |
     | * 四半期データ
     |
@@ -70,11 +70,7 @@ jpn_q_definitions="""
     |       * 季節調整系列
     |   * 1980年Q1~1993年Q4
     |       * 2015年（平成27年）基準遡及系列
-    |       * 季節調整系列
-    |
-    | 景気循環日付（四半期）
-    |   * 内閣府
-    |   * https://www.esri.cao.go.jp/jp/stat/di/hiduke.html"""
+    |       * 季節調整系列"""
 
 jpn_money_definitions="""
     | `cpi`: 消費者物価指数
@@ -135,6 +131,18 @@ ex_definitions="""
     | ＜出典＞
     | OECD Main Economic Indicators"""
 
+dates_definitions="""
+    | `tani1`: １つの循環における第１の谷
+    | `yama`:  １つの循環における山
+    | `tani2`: １つの循環における第２の谷
+    | `expansion`: 拡張期の期間（単位：月）
+    |              `tani1`から`yama`までの期間 
+    | `contraction`: 後退期の期間（単位：月）
+    |                `yama`から`tani2`までの期間 
+    |
+    | ＜出典＞
+    |   * 内閣府
+    |   * https://www.esri.cao.go.jp/jp/stat/di/hiduke.html"""
 
 # ===== Helper functions =======================================================================
 
@@ -153,22 +161,6 @@ def _mad_definitions():
 
 
 # ===== Main functions ==========================================================================
-
-def xvalues(l, h, n):
-    """引数
-        l：最小値（lowest value）
-        h：最大値（highest value）
-        n：作成する数値の数を指定する（正の整数型，number of values）
-    戻り値
-        n個の要素から構成されるリスト"""
-    
-    if ( n<=1 ) or ( not isinstance(n, int) ):
-        raise Exception(f"引数 n には2以上の整数型を使う必要があります。n={n}となっています。")
-    elif l>=h:
-        raise Exception(f"引数 l と h の値では l>h もしくは l=h となります。l<h となるように値を設定し直してください。")
-    else:
-        return [l + x*(h-l)/(n-1) for x in range(n)]
-
 
 def trend(s, lamb=1600):
     """|
@@ -199,6 +191,102 @@ def show(df):
         display(df)
 
 
+def xvalues(l, h, n):
+    """引数
+        l：最小値（lowest value）
+        h：最大値（highest value）
+        n：作成する数値の数を指定する（正の整数型，number of values）
+    戻り値
+        n個の要素から構成されるリスト"""
+    
+    if ( n<=1 ) or ( not isinstance(n, int) ):
+        raise Exception(f"引数 n には2以上の整数型を使う必要があります。n={n}となっています。")
+    elif l>=h:
+        raise Exception(f"引数 l と h の値では l>h もしくは l=h となります。l<h となるように値を設定し直してください。")
+    else:
+        return [l + x*(h-l)/(n-1) for x in range(n)]
+
+
+
+def recessions(func):
+    """横軸に`DatetimeIndex`を使うプロットに対して後退期間にグレーの塗りつぶしを追加するデコレーター
+    引数
+        func: Matplotlibのプロット実行コードを内容とする関数名
+    戻り値
+        funcが返す軸を返す
+
+    ＜例１：一つの図をプロット（軸を返さない）＞
+    @recessions
+    def plot():
+        <DataFrame もしくは Series>.plot()
+
+    ＜例２：一つの図をプロット（軸を返す）＞
+    @recessions
+    def plot():
+        ax = <DataFrame もしくは Series>.plot()
+        return ax
+
+    ＜例３：一つの図をプロット＞
+    @recessions
+    def plot():
+        fig, ax = plt.subplots()
+        ax.plot(...)
+        return ax       # 省略すると軸を返さない
+
+    ＜例４：複数の図をプロット＞
+    @recessions
+    def plot():
+        ax = <DataFrame>.plot(subplots=True, layout=(2,2))
+        return ax       # この行は必須
+
+    ＜例５：複数の図をプロット＞
+    @recessions
+    def plot():
+        fig, ax = plt.subplots(2, 1)
+        ax[0].plot(...)
+        ax[1].plot(...)
+        return ax       # この行は必須"""
+    
+    df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"), index_col='index', parse_dates=True, compression="bz2", dtype={'expansion':'Int64','contraction':'Int64'})
+    
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        
+        ax = func(*args, **kwargs)
+        
+        # 図が一つの場合，軸はそのまま返される
+        if not isinstance(ax, np.ndarray):
+            for i in df.index[8:]:
+                start = df.loc[i,'yama']
+                end = df.loc[i,'tani2']
+                plt.axvspan(start, end, color='k',alpha=0.1)
+            return ax     
+
+        # 図が複数の場合，軸はarrayとして返される
+        # DataFrame.plot()で縦に並べる場合，軸は１次元配列となる
+        elif ax.ndim == 1:
+            n = len(ax)
+            for r in range(n):
+                for i in df.index[8:]:
+                    start = df.loc[i,'yama']
+                    end = df.loc[i,'tani2']
+                    ax[r].axvspan(start, end, color='k',alpha=0.1)
+            return ax     
+
+        # 軸のarrayが2次元配列となる場合
+        elif ax.ndim > 1:
+            row = ax.shape[0]
+            col = ax.shape[1]
+            for r in range(row):
+                for c in range(col):
+                    for i in df.index[8:]:
+                        start = df.loc[i,'yama']
+                        end = df.loc[i,'tani2']
+                        ax[r,c].axvspan(start, end, color='k',alpha=0.1)
+            return ax     
+
+    return wrapper
+
 
 def data(dataset=None, description=0):
     """|
@@ -212,6 +300,7 @@ def data(dataset=None, description=0):
        |         'jpn-money': 日本の四半期データ（マネーストックなど）
        |         'world-money': 177ヵ国のマネーストックなど
        |         'ex': 円/ドル為替レートなど
+       |         'dates': 景気循環日付と拡張・後退期間
        |
        |     description (デフォルト：0, 整数型):
        |         0: データのDataFrameを返す
@@ -274,7 +363,7 @@ def data(dataset=None, description=0):
        |         South America"""
 
 
-    if dataset not in ['pwt','weo','mad','mad-regions','jpn-q','jpn-money','world-money','ex']:
+    if dataset not in ['pwt','weo','mad','mad-regions','jpn-q','jpn-money','world-money','ex','dates']:
         try:
             raise ValueError("""次の内１つを選んでください。
     'pwt': Penn World Table 10.0
@@ -284,7 +373,8 @@ def data(dataset=None, description=0):
     'jpn-q': 日本の四半期データ（GDPなど）
     'jpn-money': 日本の四半期データ（マネーストックなど）
     'world-money': 177ヵ国のマネーストックなど
-    'ex': 円/ドル為替レートなど""")
+    'ex': 円/ドル為替レートなど
+    'dates': 景気循環日付など""")
         except ValueError as e:
             print(e)
 
@@ -497,6 +587,23 @@ def data(dataset=None, description=0):
         print(ex_definitions)
 
     elif (dataset=='ex') & (description not in [0,1]):
+        try:
+            raise ValueError("""descriptionに次の内１つを選んでください。
+    0: データのDataFrame
+    1: 変数の定義を表示""")
+        except ValueError as e:
+            print(e)
+
+    # 景気循環日付など -----------------------------------------------------
+    elif (dataset=='dates') & (description==0):
+        df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"), index_col='index', parse_dates=True, compression="bz2", dtype={'expansion':'Int64','contraction':'Int64'})
+        df.index.name = ''
+        return df
+
+    elif (dataset=='dates') & (description==1):
+        print(dates_definitions)
+
+    elif (dataset=='dates') & (description not in [0,1]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame
