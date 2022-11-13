@@ -1,5 +1,6 @@
 import functools
 import numpy as np
+import matplotlib.pyplot as plt
 import pandas as pd
 from os.path import abspath, join, split
 
@@ -216,31 +217,31 @@ def recessions(func):
         funcが返す軸を返す
 
     ＜例１：一つの図をプロット（軸を返さない）＞
-    @recessions
+    @py4macro.recessions
     def plot():
         <DataFrame もしくは Series>.plot()
 
     ＜例２：一つの図をプロット（軸を返す）＞
-    @recessions
+    @py4macro.recessions
     def plot():
         ax = <DataFrame もしくは Series>.plot()
         return ax
 
     ＜例３：一つの図をプロット＞
-    @recessions
+    @py4macro.recessions
     def plot():
         fig, ax = plt.subplots()
         ax.plot(...)
         return ax       # 省略すると軸を返さない
 
     ＜例４：複数の図をプロット＞
-    @recessions
+    @py4macro.recessions
     def plot():
         ax = <DataFrame>.plot(subplots=True, layout=(2,2))
         return ax       # この行は必須
 
     ＜例５：複数の図をプロット＞
-    @recessions
+    @py4macro.recessions
     def plot():
         fig, ax = plt.subplots(2, 1)
         ax[0].plot(...)
