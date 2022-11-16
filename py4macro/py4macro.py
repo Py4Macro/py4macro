@@ -161,7 +161,7 @@ def _mad_definitions():
     return df
 
 
-# ===== Main functions ==========================================================================
+# ===== Non-data-related functions ==========================================================================
 
 def trend(s, lamb=1600):
     """|
@@ -209,39 +209,89 @@ def xvalues(l, h, n):
 
 
 
-def recessions(func):
-    """横軸に`DatetimeIndex`を使うプロットに対して後退期間にグレーの塗りつぶしを追加するデコレーター
-    引数
-        func: Matplotlibのプロット実行コードを内容とする関数名
+def fukyo(ax, color='k', alpha=0.1):
+    """
+    * 横軸に`DatetimeIndex`を使うプロットに対して後退期間にグレーの塗りつぶしを追加する関数
+    * `@py4macro.recessions`デコレーターとの違い
+        * `@py4macro.recessions`は全ての図に塗りつぶしを追加する
+        * `fukyo()`関数は個々の軸に塗りつぶしを追加する
+
+    引数：
+        ax：`matplotlib`の軸
+        color：色（デフォルトは黒）
+        alpha：透明度（デフォルトは`0.1）
+
+    戻り値：
+        なし（表示のみ）
+
+    ＜例１：一つの図＞
+    fig, ax = plt.subplots()
+    ax.plot(...)
+    fukyo(ax)
+
+    ＜例２：一つの図＞
+    ax = <DataFrame もしくは Series>.plot()
+    fukyo(ax, color='red')
+
+    ＜例３：複数の図の中で一つだけに追加＞
+    fig, ax = plt.subplots(2,1)
+    ax[0].plot(...)
+    ax[1].plot(...)
+    fukyo(ax[0], color='grey', alpha=0.2)
+    """
+    
+    df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"), index_col='index', parse_dates=True, compression="bz2", dtype={'expansion':'Int64','contraction':'Int64'})
+    
+    for i in df.index[8:]:
+        start = df.loc[i,'yama']
+        end = df.loc[i,'tani2']
+        ax.axvspan(start, end, color=color, alpha=alpha)
+    # return ax     
+
+
+
+# ===== Decorator ==========================================================================
+
+def recessions(color='k', alpha=0.1):
+    """
+    * 横軸に`DatetimeIndex`を使うプロットに対して後退期間にグレーの塗りつぶしを追加するデコレーター
+    * `fukyo()`関数との違い
+        * `@py4macro.recessions`は全ての図に塗りつぶしを追加する
+        * `fukyo()`関数は個々の軸に塗りつぶしを追加する
+
+    引数：
+        color：色（デフォルトは黒）
+        alpha：透明度（デフォルトは`0.1）
+
     戻り値
         funcが返す軸を返す
 
     ＜例１：一つの図をプロット（軸を返さない）＞
-    @py4macro.recessions
+    @py4macro.recessions()
     def plot():
         <DataFrame もしくは Series>.plot()
 
     ＜例２：一つの図をプロット（軸を返す）＞
-    @py4macro.recessions
+    @py4macro.recessions(color='r')
     def plot():
         ax = <DataFrame もしくは Series>.plot()
         return ax
 
     ＜例３：一つの図をプロット＞
-    @py4macro.recessions
+    @py4macro.recessions(alpha=0.5)
     def plot():
         fig, ax = plt.subplots()
         ax.plot(...)
         return ax       # 省略すると軸を返さない
 
     ＜例４：複数の図をプロット＞
-    @py4macro.recessions
+    @py4macro.recessions(color='green', alpha=0.2)
     def plot():
         ax = <DataFrame>.plot(subplots=True, layout=(2,2))
         return ax       # この行は必須
 
     ＜例５：複数の図をプロット＞
-    @py4macro.recessions
+    @py4macro.recessions(color='grey', alpha=0.1)
     def plot():
         fig, ax = plt.subplots(2, 1)
         ax[0].plot(...)
@@ -249,45 +299,51 @@ def recessions(func):
         return ax       # この行は必須"""
     
     df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"), index_col='index', parse_dates=True, compression="bz2", dtype={'expansion':'Int64','contraction':'Int64'})
-    
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        
-        ax = func(*args, **kwargs)
-        
-        # 図が一つの場合，軸はそのまま返される
-        if not isinstance(ax, np.ndarray):
-            for i in df.index[8:]:
-                start = df.loc[i,'yama']
-                end = df.loc[i,'tani2']
-                plt.axvspan(start, end, color='k',alpha=0.1)
-            return ax     
 
-        # 図が複数の場合，軸はarrayとして返される
-        # DataFrame.plot()で縦に並べる場合，軸は１次元配列となる
-        elif ax.ndim == 1:
-            n = len(ax)
-            for r in range(n):
+    def _recessions(func):
+    
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            
+            ax = func(*args, **kwargs)
+            
+            # 図が一つの場合，軸はそのまま返される
+            if not isinstance(ax, np.ndarray):
                 for i in df.index[8:]:
                     start = df.loc[i,'yama']
                     end = df.loc[i,'tani2']
-                    ax[r].axvspan(start, end, color='k',alpha=0.1)
-            return ax     
+                    plt.axvspan(start, end, color=color, alpha=alpha)
+                return ax     
 
-        # 軸のarrayが2次元配列となる場合
-        elif ax.ndim > 1:
-            row = ax.shape[0]
-            col = ax.shape[1]
-            for r in range(row):
-                for c in range(col):
+            # 図が複数の場合，軸はarrayとして返される
+            # DataFrame.plot()で縦に並べる場合，軸は１次元配列となる
+            elif ax.ndim == 1:
+                n = len(ax)
+                for r in range(n):
                     for i in df.index[8:]:
                         start = df.loc[i,'yama']
                         end = df.loc[i,'tani2']
-                        ax[r,c].axvspan(start, end, color='k',alpha=0.1)
-            return ax     
+                        ax[r].axvspan(start, end, color=color, alpha=alpha)
+                return ax     
 
-    return wrapper
+            # 軸のarrayが2次元配列となる場合
+            elif ax.ndim > 1:
+                row = ax.shape[0]
+                col = ax.shape[1]
+                for r in range(row):
+                    for c in range(col):
+                        for i in df.index[8:]:
+                            start = df.loc[i,'yama']
+                            end = df.loc[i,'tani2']
+                            ax[r,c].axvspan(start, end, color=color, alpha=alpha)
+                return ax     
 
+        return wrapper
+
+    return _recessions
+
+
+# ===== Data-related function ==========================================================================
 
 def data(dataset=None, description=0):
     """|

@@ -11,7 +11,8 @@
 * Hodrick-Prescottフィルターを使い時系列データのトレンドを返す`trend()`関数
 * DataFrameを全て表示する`show()`関数
 * `n`個の浮動小数点数から構成されるリストを返す`xvalues()`関数
-* 後退期間にグレーの塗りつぶしを追加する`@recessions`デコレーター
+* 後退期間にグレーの塗りつぶしを追加する`fukyo()`関数
+* 後退期間にグレーの塗りつぶしを追加する`recessions()`デコレーター
 * データ・セット
     * Penn World Tables 10.0
     * IMF World Economic Outlook 2021
@@ -36,7 +37,7 @@ py4macro.trend(s,lamb=1600)
 * `s`：`Series`もしくは１列の`DataFrame`とし，行のラベルは`DatetimeIndex`にすること。
 * lamb: HPフィルターのlambda（デフォルトは四半期用のデータでは通常の値である1600としている）
 
-**返り値**:
+**戻り値**:
 
 Hodrick-Prescottフィルターで計算したtrend（トレンド）の`Series`
 
@@ -53,7 +54,7 @@ py4macro.show(df)
 **引数**：
 * `df`：`DataFrame`
 
-**返り値**：
+**戻り値**：
 
 `DataFrame`の表示のみ
 
@@ -67,7 +68,7 @@ py4macro.xvalues(l, h, n)
 * `h`：最大値
 * `n`：要素数
 
-**返り値**：
+**戻り値**：
 
 `n`個の浮動小数点数のリスト
 
@@ -80,22 +81,66 @@ py4macro.xvalues(l, h, n)
 ```
 
 
-## 横軸に`DatetimeIndex`を使うプロットに対して後退期間にグレーの塗りつぶしを追加するデコレーター
+## 横軸に`DatetimeIndex`を使うプロットに対して後退期間にグレーの塗りつぶしを追加する関数
+* `fukyo()`関数は個々の軸に塗りつぶしを追加する
+
 ```
-@recessions
+py4macro.fukyo(ax, color='k', alpha='0.1')
+```
+**引数**：
+* `ax`：`matplotlib`の軸
+* `color`：色（デフォルトは黒）
+* `alpha`：透明度（デフォルトは`0.1）
+
+**戻り値**：
+* なし（表示のみ）
+
+
+＜例１：一つの図＞
+```
+fig, ax = plt.subplots()
+ax.plot(...)
+fukyo(ax)
+```
+
+＜例２：一つの図＞
+```
+ax = <DataFrame もしくは Series>.plot()
+fukyo(ax, color='red')
+```
+
+＜例３：複数の図の中で一つだけに追加＞
+```
+fig, ax = plt.subplots(2,1)
+ax[0].plot(...)
+ax[1].plot(...)
+fukyo(ax[0], color='grey', alpha=0.2)
+```
+
+
+## 横軸に`DatetimeIndex`を使うプロットに対して後退期間にグレーの塗りつぶしを追加するデコレーター
+* `@py4macro.recessions()`は全ての軸に塗りつぶしを追加する
+
+```
+@py4macro.recessions()
 ＜関数＞
 ```
 
+**引数**：
+* `color`：色（デフォルトは黒）
+* `alpha`：透明度（デフォルトは`0.1）
+
+
 ＜例１：一つの図をプロット（軸を返さない）＞
 ```
-@py4macro.recessions
+@py4macro.recessions()
 def plot():
     <DataFrame もしくは Series>.plot()
 ```
 
 ＜例２：一つの図をプロット（軸を返す）＞
 ```
-@py4macro.recessions
+@py4macro.recessions(color='red')
 def plot():
     ax = <DataFrame もしくは Series>.plot()
     return ax
@@ -103,7 +148,7 @@ def plot():
 
 ＜例３：一つの図をプロット＞
 ```
-@py4macro.recessions
+@py4macro.recessions(alpha=0.9)
 def plot():
     fig, ax = plt.subplots()
     ax.plot(...)
@@ -112,7 +157,7 @@ def plot():
 
 ＜例４：複数の図をプロット＞
 ```
-@py4macro.recessions
+@py4macro.recessions(color='green', alpha=0.2)
 def plot():
     ax = <DataFrame>.plot(subplots=True, layout=(2,2))
     return ax       # この行は必須
@@ -120,7 +165,7 @@ def plot():
 
 ＜例５：複数の図をプロット＞
 ```
-@py4macro.recessions
+@py4macro.recessions(color='grey', alpha=0.3)
 def plot():
     fig, ax = plt.subplots(2, 1)
     ax[0].plot(...)
