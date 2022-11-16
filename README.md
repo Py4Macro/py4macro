@@ -122,7 +122,7 @@ fukyo(ax[0], color='grey', alpha=0.2)
 * `@py4macro.recessions()`は全ての軸に塗りつぶしを追加する
 
 ```
-@py4macro.recessions()
+@py4macro.recessions(color='k', alpha=0.1)
 ＜関数＞
 ```
 
