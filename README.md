@@ -95,7 +95,7 @@ py4macro.fukyo(ax, color='k', alpha='0.1')
 **戻り値**：
 * なし（表示のみ）
 
-<img height="350" src="figures/fukyo.pdf">
+<img height="350" src="figures/fukyo.jpg">
 
 
 ＜例１：一つの図＞
