@@ -245,7 +245,7 @@ def fukyo(ax, color='k', alpha=0.1):
     for i in df.index[8:]:
         start = df.loc[i,'yama']
         end = df.loc[i,'tani2']
-        ax.axvspan(start, end, color=color, alpha=alpha)
+        ax.axvspan(start, end, fill=True, linewidth=0, color=color, alpha=alpha)
     # return ax     
 
 
@@ -312,7 +312,7 @@ def recessions(color='k', alpha=0.1):
                 for i in df.index[8:]:
                     start = df.loc[i,'yama']
                     end = df.loc[i,'tani2']
-                    plt.axvspan(start, end, color=color, alpha=alpha)
+                    plt.axvspan(start, end, fill=True, linewidth=0, color=color, alpha=alpha)
                 return ax     
 
             # 図が複数の場合，軸はarrayとして返される
@@ -323,7 +323,7 @@ def recessions(color='k', alpha=0.1):
                     for i in df.index[8:]:
                         start = df.loc[i,'yama']
                         end = df.loc[i,'tani2']
-                        ax[r].axvspan(start, end, color=color, alpha=alpha)
+                        ax[r].axvspan(start, end, fill=True, linewidth=0, color=color, alpha=alpha)
                 return ax     
 
             # 軸のarrayが2次元配列となる場合
@@ -335,7 +335,7 @@ def recessions(color='k', alpha=0.1):
                         for i in df.index[8:]:
                             start = df.loc[i,'yama']
                             end = df.loc[i,'tani2']
-                            ax[r,c].axvspan(start, end, color=color, alpha=alpha)
+                            ax[r,c].axvspan(start, end, fill=True, linewidth=0, color=color, alpha=alpha)
                 return ax     
 
         return wrapper

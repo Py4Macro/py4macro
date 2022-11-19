@@ -82,7 +82,7 @@ py4macro.xvalues(l, h, n)
 
 
 ## 横軸に`DatetimeIndex`を使うプロットに対して後退期間にグレーの塗りつぶしを追加する関数
-* `fukyo()`関数は個々の軸に塗りつぶしを追加する
+* `fukyo()`関数は後退期間の塗りつぶしを追加する
 
 ```
 py4macro.fukyo(ax, color='k', alpha='0.1')
@@ -90,10 +90,12 @@ py4macro.fukyo(ax, color='k', alpha='0.1')
 **引数**：
 * `ax`：`matplotlib`の軸
 * `color`：色（デフォルトは黒）
-* `alpha`：透明度（デフォルトは`0.1）
+* `alpha`：透明度（デフォルトは`0.1`）
 
 **戻り値**：
 * なし（表示のみ）
+
+<img height="350" src="figures/fukyo.pdf">
 
 
 ＜例１：一つの図＞
@@ -119,7 +121,7 @@ fukyo(ax[0], color='grey', alpha=0.2)
 
 
 ## 横軸に`DatetimeIndex`を使うプロットに対して後退期間にグレーの塗りつぶしを追加するデコレーター
-* `@py4macro.recessions()`は全ての軸に塗りつぶしを追加する
+* `@py4macro.recessions()`は全ての軸に後退期間の塗りつぶしを追加する
 
 ```
 @py4macro.recessions(color='k', alpha=0.1)
