@@ -7,8 +7,8 @@ from .py4macro import *
 __all__ = ['data','trend','show','xvalues','recessions','fukyo']
 
 __author__ = 'Tetsu Haruyama'
-__version__ = '0.8.3'
-__copyright__ = 'Copyright (c) 2022 Tetsu Haruyama'
+__version__ = '0.8.4'
+__copyright__ = 'Copyright (c) 2023 Tetsu Haruyama'
 
 __doc__ = """
     「Pythonで学ぶマクロ経済学 (中級＋レベル)」のためのモジュール

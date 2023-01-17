@@ -9,7 +9,7 @@ for filename in glob.iglob('./py4macro/**', recursive=True):
 
 setup(
     name='py4macro',
-    version='0.8.3',
+    version='0.8.4',
     author='Tetsu Haruyama',
     author_email='haruyama@econ.kobe-u.ac.jp',
     packages=find_packages(exclude=("data_generation",)),
