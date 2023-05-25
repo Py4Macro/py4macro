@@ -374,7 +374,7 @@ def data(dataset=None, description=0):
        |         'world-money': 177ヵ国のマネーストックなど
        |         'ex': 円/ドル為替レートなど
        |         'dates': 景気循環日付と拡張・後退期間
-       |         'bigmac': Big Mac インデックスと購買力平価
+       |         'bigmac': Big Macインデックスと購買力平価
        |
        |     description (デフォルト：0, 整数型):
        |         0: データのDataFrameを返す
@@ -437,7 +437,7 @@ def data(dataset=None, description=0):
        |         South America"""
 
 
-    if dataset not in ['pwt','weo','mad','mad-regions','jpn-q','jpn-money','world-money','ex','dates']:
+    if dataset not in ['pwt','weo','mad','mad-regions','jpn-q','jpn-money','world-money','ex','dates','bigmac']:
         try:
             raise ValueError("""次の内１つを選んでください。
     'pwt': Penn World Table 10.0
@@ -449,7 +449,7 @@ def data(dataset=None, description=0):
     'world-money': 177ヵ国のマネーストックなど
     'ex': 円/ドル為替レートなど
     'dates': 景気循環日付など
-    'bigmac': Big Mac インデックスと購買力平価""")
+    'bigmac': Big Macインデックスと購買力平価""")
         except ValueError as e:
             print(e)
 
