@@ -14,7 +14,7 @@
 * 後退期間にグレーの塗りつぶしを追加する`fukyo()`関数
 * 後退期間にグレーの塗りつぶしを追加する`recessions()`デコレーター
 * データ・セット
-    * Penn World Tables 10.0
+    * Penn World Tables 10.01
     * IMF World Economic Outlook 2021
     * Maddison Project Database 2020
     * 日本の四半期データ（GDPなど）
@@ -22,6 +22,7 @@
     * 177ヵ国のマネーストックなど
     * 円/ドル為替レートなど
     * 景気循環日付と拡張・後退期間
+    * Big Mac インデックスと購買力平価
 
 # 使い方
 ```
@@ -193,6 +194,7 @@ py4macro.data(dataset=None, description=0)
     * `'jpn-money'`: 日本の月次データ（CPIとマネーストック）
     * `'world-money'`: 177ヵ国のマネーストックなど
     * `'ex'`: 円/ドル為替レートなど
+    * `'bigmac'`: Big Mac インデックスと購買力平価
 
 
 * `description` (デフォルト：`0`, 整数型):
