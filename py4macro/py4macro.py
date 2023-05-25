@@ -365,7 +365,7 @@ def data(dataset=None, description=0):
     """|
        | 引数：
        |     dataset: (文字列)
-       |         'pwt':   Penn World Table 10.0
+       |         'pwt':   Penn World Table 10.01
        |         'weo':   IMF World Economic Outlook 2021
        |         'mad':   country data of Maddison Project Database 2020
        |         'mad-regions':   regional data of Maddison Project Database 2020
@@ -374,6 +374,7 @@ def data(dataset=None, description=0):
        |         'world-money': 177ヵ国のマネーストックなど
        |         'ex': 円/ドル為替レートなど
        |         'dates': 景気循環日付と拡張・後退期間
+       |         'bigmac': Big Mac インデックスと購買力平価
        |
        |     description (デフォルト：0, 整数型):
        |         0: データのDataFrameを返す
@@ -447,7 +448,8 @@ def data(dataset=None, description=0):
     'jpn-money': 日本の四半期データ（マネーストックなど）
     'world-money': 177ヵ国のマネーストックなど
     'ex': 円/ドル為替レートなど
-    'dates': 景気循環日付など""")
+    'dates': 景気循環日付など
+    'bigmac': Big Mac インデックスと購買力平価""")
         except ValueError as e:
             print(e)
 
