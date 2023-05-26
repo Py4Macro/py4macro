@@ -147,19 +147,24 @@ dates_definitions="""
     |   * https://www.esri.cao.go.jp/jp/stat/di/hiduke.html"""
 
 bigmac_definitions="""
-    | `year`: 年
+    | `year`: 年（2000年〜2022年）
     | `country`: 国名
     | `iso`: ISO国コード
     | `currency_code`: 通貨コード
     | `bm_local_price`: ビッグマックの自国通貨価格
-    | `ppp`: 購買力平価に基づく交換率
+    | `ppp`: 購買力平価に基づく交換率（自国通貨単位/international $）
     | `exr`: 名目為替レート（自国通貨単位/米ドル）
     | `ngdppc`: 名目一人当たりGDP（自国通貨単位）
     | `rgdppc`: 実質一人当たりGDP（自国通貨単位）
     |
+    | * 年次データ
+    |
     | ＜出典＞
     | `bm_local_price`: https://github.com/TheEconomist/big-mac-data
-    | その他: The World Bank"""
+    | `ppp`: `PA.NUS.PPP`,  the World Bank
+    | `exr`: `PA.NUS.FCRF`, the World Bank
+    | `ngdppc`: `NY.GDP.PCAP.CN`, the World Bank
+    | `rgdppc: `NY.GDP.PCAP.KN`, the World Bank"""
 
 # ===== Helper functions =======================================================================
 
