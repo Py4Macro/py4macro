@@ -152,7 +152,10 @@ bigmac_definitions="""
     | `iso`: ISO国コード
     | `currency_code`: 通貨コード
     | `bm_local_price`: ビッグマックの自国通貨価格
-    | `ppp`: 購買力平価に基づく交換率（自国通貨単位/international $）
+    | `ppp`: 購買力平価に基づく交換率（自国通貨単位/international dollar）
+    |      An international dollar would buy in the cited country a comparable
+    |      amount of goods and services a U.S. dollar would buy in the United States.
+    |      https://datahelpdesk.worldbank.org/knowledgebase/articles/114944-what-is-an-international-dollar
     | `exr`: 名目為替レート（自国通貨単位/米ドル）
     | `ngdppc`: 名目一人当たりGDP（自国通貨単位）
     | `rgdppc`: 実質一人当たりGDP（自国通貨単位）
