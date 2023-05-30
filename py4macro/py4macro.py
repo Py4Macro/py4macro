@@ -154,9 +154,6 @@ ppp_definitions="""
     | `bm_local_price`: ビッグマックの自国通貨価格
     | `exr`: 名目為替レート（自国通貨単位/米ドル）
     | `ppp`: 購買力平価に基づく交換率（自国通貨単位/international dollar）
-    |      An international dollar would buy in the cited country a comparable
-    |      amount of goods and services a U.S. dollar would buy in the United States.
-    |      https://datahelpdesk.worldbank.org/knowledgebase/articles/114944-what-is-an-international-dollar
     | `rgdppc`: 実質一人当たりGDP（自国通貨単位）
     | `ngdppc`: 名目一人当たりGDP（自国通貨単位）
     |
