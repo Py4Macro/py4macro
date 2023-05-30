@@ -146,28 +146,28 @@ dates_definitions="""
     |   * 内閣府
     |   * https://www.esri.cao.go.jp/jp/stat/di/hiduke.html"""
 
-bigmac_definitions="""
+ppp_definitions="""
     | `year`: 年（2000年〜2022年）
     | `country`: 国名
     | `iso`: ISO国コード
     | `currency_code`: 通貨コード
     | `bm_local_price`: ビッグマックの自国通貨価格
+    | `exr`: 名目為替レート（自国通貨単位/米ドル）
     | `ppp`: 購買力平価に基づく交換率（自国通貨単位/international dollar）
     |      An international dollar would buy in the cited country a comparable
     |      amount of goods and services a U.S. dollar would buy in the United States.
     |      https://datahelpdesk.worldbank.org/knowledgebase/articles/114944-what-is-an-international-dollar
-    | `exr`: 名目為替レート（自国通貨単位/米ドル）
-    | `ngdppc`: 名目一人当たりGDP（自国通貨単位）
     | `rgdppc`: 実質一人当たりGDP（自国通貨単位）
+    | `ngdppc`: 名目一人当たりGDP（自国通貨単位）
     |
     | * 年次データ
     |
     | ＜出典＞
     | `bm_local_price`: https://github.com/TheEconomist/big-mac-data
-    | `ppp`: `PA.NUS.PPP`,  the World Bank
     | `exr`: `PA.NUS.FCRF`, the World Bank
-    | `ngdppc`: `NY.GDP.PCAP.CN`, the World Bank
-    | `rgdppc: `NY.GDP.PCAP.KN`, the World Bank"""
+    | `ppp`: `PA.NUS.PPP`,  the World Bank
+    | `rgdppc: `NY.GDP.PCAP.KN`, the World Bank
+    | `ngdppc`: `NY.GDP.PCAP.CN`, the World Bank"""
 
 # ===== Helper functions =======================================================================
 
@@ -382,7 +382,7 @@ def data(dataset=None, description=0):
        |         'world-money': 177ヵ国のマネーストックなど
        |         'ex': 円/ドル為替レートなど
        |         'dates': 景気循環日付と拡張・後退期間
-       |         'bigmac': Big Macインデックスと購買力平価
+       |         'ppp': Big Macインデックスと購買力平価
        |
        |     description (デフォルト：0, 整数型):
        |         0: データのDataFrameを返す
@@ -445,7 +445,7 @@ def data(dataset=None, description=0):
        |         South America"""
 
 
-    if dataset not in ['pwt','weo','mad','mad-regions','jpn-q','jpn-money','world-money','ex','dates','bigmac']:
+    if dataset not in ['pwt','weo','mad','mad-regions','jpn-q','jpn-money','world-money','ex','dates','ppp']:
         try:
             raise ValueError("""次の内１つを選んでください。
     'pwt': Penn World Table 10.0
@@ -457,7 +457,7 @@ def data(dataset=None, description=0):
     'world-money': 177ヵ国のマネーストックなど
     'ex': 円/ドル為替レートなど
     'dates': 景気循環日付など
-    'bigmac': Big Macインデックスと購買力平価""")
+    'ppp': Big Macインデックスと購買力平価""")
         except ValueError as e:
             print(e)
 
@@ -695,15 +695,15 @@ def data(dataset=None, description=0):
             print(e)
 
     # Big Mac Index -----------------------------------------------------
-    elif (dataset=='bigmac') & (description==0):
-        df = pd.read_csv(join(_get_path(__file__), "data/bigmac.csv.bz2"), index_col='index', compression="bz2", dtype={'expansion':'Int64','contraction':'Int64'})
+    elif (dataset=='ppp') & (description==0):
+        df = pd.read_csv(join(_get_path(__file__), "data/ppp.csv.bz2"), index_col='index', compression="bz2", dtype={'expansion':'Int64','contraction':'Int64'})
         df.index.name = ''
         return df
 
-    elif (dataset=='bigmac') & (description==1):
-        print(bigmac_definitions)
+    elif (dataset=='ppp') & (description==1):
+        print(ppp_definitions)
 
-    elif (dataset=='bigmac') & (description not in [0,1]):
+    elif (dataset=='ppp') & (description not in [0,1]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame
