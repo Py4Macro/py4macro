@@ -154,8 +154,10 @@ ppp_definitions="""
     | `bm_local_price`: ビッグマックの自国通貨価格
     | `exr`: 名目為替レート（自国通貨単位/米ドル）
     | `ppp`: 購買力平価に基づく交換率（自国通貨単位/international dollar）
-    | `rgdppc`: 実質一人当たりGDP（自国通貨単位）
-    | `ngdppc`: 名目一人当たりGDP（自国通貨単位）
+    | `rgdppc`: 実質一人当たりGDP（購買力平価, international dollar）
+    | `ngdppc`: 名目一人当たりGDP（購買力平価, international dollar）
+    | `rgdppc_lcu`: 実質一人当たりGDP（Local Currency Unit, 自国通貨単位）
+    | `ngdppc_lcu`: 名目一人当たりGDP（Local Currency Univ, 自国通貨単位）
     |
     | * 年次データ
     |
@@ -163,8 +165,10 @@ ppp_definitions="""
     | `bm_local_price`: https://github.com/TheEconomist/big-mac-data
     | `exr`: `PA.NUS.FCRF`, the World Bank
     | `ppp`: `PA.NUS.PPP`,  the World Bank
-    | `rgdppc: `NY.GDP.PCAP.KN`, the World Bank
-    | `ngdppc`: `NY.GDP.PCAP.CN`, the World Bank"""
+    | `rgdppc: `rgdppc_local`/`ppp`
+    | `ngdppc`: `ngdppc_local`/`ppp`
+    | `rgdppc_local: `NY.GDP.PCAP.KN`, the World Bank
+    | `ngdppc_local`: `NY.GDP.PCAP.CN`, the World Bank"""
 
 # ===== Helper functions =======================================================================
 
