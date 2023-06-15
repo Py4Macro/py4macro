@@ -151,7 +151,7 @@ bigmac_definitions="""
     | `country`: 国名
     | `iso`: ISO国コード
     | `currency_code`: 通貨コード
-    | `local_price`: ビッグマックの価格（自国通貨単位）
+    | `price_local`: ビッグマックの価格（自国通貨単位）
     | `exr`: 名目為替レート（自国通貨単位/米ドル）
     | `ppp`: 購買力平価レート（自国通貨単位/international dollar, international dollar=米ドル）
     | `gdppc_dollar`: 名目一人当たりGDP（米ドル）
