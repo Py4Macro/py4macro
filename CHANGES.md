@@ -1,9 +1,5 @@
-v0.8.6, 2023-05-30
-* データセット`bigmac`の名前を`ppp`に変更
-* 変数`bm_local_price`を`bm_lcu`に変更
-* 変数`rgdppc`と`ngdppc`の定義を変更
-* 変数`rgdppc_lcu`と`ngdppc_lcu`を追加
-* `ppp`の具体的な出典を追加
+v0.8.6, 2023-??-??
+* `bigmac`の変数を一新
 
 v0.8.5, 2023-05-25
 * Penn World Table 10.01にアップデート

@@ -194,7 +194,7 @@ py4macro.data(dataset=None, description=0)
     * `'jpn-money'`: 日本の月次データ（CPIとマネーストック）
     * `'world-money'`: 177ヵ国のマネーストックなど
     * `'ex'`: 円/ドル為替レートなど
-    * `'ppp'`: Big Macインデックスと購買力平価
+    * `'bigmac'`: Big Macインデックスと購買力平価
 
 
 * `description` (デフォルト：`0`, 整数型):
