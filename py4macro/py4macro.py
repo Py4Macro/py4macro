@@ -151,17 +151,14 @@ bigmac_definitions="""
     | `country`: 国名
     | `iso`: ISO国コード
     | `currency_code`: 通貨コード
-    | `price_local`: ビッグマックの価格（自国通貨単位）
+    | `price_local`: Big Macの価格（自国通貨単位）
     | `exr`: 名目為替レート（自国通貨単位/米ドル）
-    | `ppp`: 購買力平価レート（自国通貨単位/international dollar, international dollar=米ドル）
-    | `gdppc_dollar`: 名目一人当たりGDP（米ドル）
     | `gdppc_local`: 名目一人当たりGDP（自国通貨単位）
     |
     | * 年次データ
     |
     | ＜出典＞
-    | `ppp`: データID `PA.NUS.PPP`,  the World Bank
-    | `ppp`以外: https://github.com/TheEconomist/big-mac-data"""
+    | https://github.com/TheEconomist/big-mac-data (Copyright The Economist)"""
 
 # ===== Helper functions =======================================================================
 
@@ -376,7 +373,7 @@ def data(dataset=None, description=0):
        |         'world-money': 177ヵ国のマネーストックなど
        |         'ex': 円/ドル為替レートなど
        |         'dates': 景気循環日付と拡張・後退期間
-       |         'bigmac': Big Macインデックスと購買力平価
+       |         'bigmac': Big Macインデックス
        |
        |     description (デフォルト：0, 整数型):
        |         0: データのDataFrameを返す
@@ -451,7 +448,7 @@ def data(dataset=None, description=0):
     'world-money': 177ヵ国のマネーストックなど
     'ex': 円/ドル為替レートなど
     'dates': 景気循環日付など
-    'bigmac': Big Macインデックスと購買力平価""")
+    'bigmac': Big Macインデックス""")
         except ValueError as e:
             print(e)
 
