@@ -147,7 +147,7 @@ dates_definitions="""
     |   * https://www.esri.cao.go.jp/jp/stat/di/hiduke.html"""
 
 bigmac_definitions="""
-    | `year`: 年（2000年〜2022年）
+    | `year`: 年（2000年〜2023年）
     | `country`: 国名
     | `iso`: ISO国コード
     | `currency_code`: 通貨コード
@@ -439,7 +439,7 @@ def data(dataset=None, description=0):
     if dataset not in ['pwt','weo','mad','mad-regions','jpn-q','jpn-money','world-money','ex','dates','bigmac']:
         try:
             raise ValueError("""次の内１つを選んでください。
-    'pwt': Penn World Table 10.0
+    'pwt': Penn World Table 10.01
     'weo': IMF World Economic Outlook 2021
     'mad': country data of Maddison Project Database 2020
     'mad-regions': regional data of Maddison Project Database 2020
