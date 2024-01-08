@@ -427,28 +427,27 @@ def _create_template(obj, col, width):
     return template_dic
 
 
-def see(obj, col=5, width=70):
+def see(obj, col=4, width=70):
     """
-    オブジェクトの属性を表示する
+    オブジェクトの属性（`_`もしくは`__`が付いた属性以外）を表示する
 
     引数：
         obj: 属性を調べるオブジェクト
-        col: 表示する際の列の数（デフォルトは5）
+        col: 表示する際の列の数（デフォルトは4）
         width: 表示の幅（デフォルトは70）
         　　　　　(列の幅は width/col 以上である最小整数となる)
     戻り値：
         None (表示のみ)
 
 
-    例：整数型である100の属性を調べる。列は4と指定する。
+    例：整数型である100の属性を調べる。
 
-        see(100, col=4)
+       see(100)
 
-        ＜実行結果＞
-
-        as_integer_ratio  bit_count         bit_length        conjugate
-        denominator       from_bytes        imag              numerator
-        real              to_bytes
+       ＜実行結果＞
+       .as_integer_ratio   .bit_count          .bit_length         .conjugate
+       .denominator        .from_bytes         .imag               .numerator
+       .real               .to_bytes
     """
 
     lst = [i for i in dir(obj) if i[0] != "_"]
@@ -469,14 +468,14 @@ def see(obj, col=5, width=70):
         # create a new inner list with inserted text
         inner_lst_new = []
         for idx, j in enumerate(template[num]):
-            inner_lst_new.append(j.format(inner_lst[idx]))
+            inner_lst_new.append(j.format("."+inner_lst[idx]))
 
         # create concatenated strings for a line to print
         line_str = ""
         for e in inner_lst_new:
-            line_str += e
+            line_str += e+"  "
 
-        print(line_str)
+        print(line_str.strip())
 
 
 # ===== Data-related function =================================================
