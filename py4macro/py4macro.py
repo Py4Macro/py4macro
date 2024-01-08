@@ -378,7 +378,7 @@ def recessions(color='k', alpha=0.1):
     return _recessions
 
 
-# ===== What function (show attributes) =======================================
+# ===== see function (show attributes) =======================================
 
 
 def _create_template(obj, col, width):
@@ -427,7 +427,7 @@ def _create_template(obj, col, width):
     return template_dic
 
 
-def what(obj, col=5, width=70):
+def see(obj, col=5, width=70):
     """
     オブジェクトの属性を表示する
 
@@ -442,7 +442,7 @@ def what(obj, col=5, width=70):
 
     例：整数型である100の属性を調べる。列は4と指定する。
 
-        what(100, col=4)
+        see(100, col=4)
 
         ＜実行結果＞
 
