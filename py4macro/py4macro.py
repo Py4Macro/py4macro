@@ -2,12 +2,13 @@ import functools
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from math import ceil
 from os.path import abspath, join, split
 
 
-# ===== Definitions =========================================================================
+# ===== Definitions ===========================================================
 
-jpn_q_definitions="""
+jpn_q_definitions = """
     | `gdp`: 国内総生産（GDP）
     | `consumption`: 消費
     | `investment`: 投資
@@ -74,7 +75,7 @@ jpn_q_definitions="""
     |       * 2015年（平成27年）基準遡及系列
     |       * 季節調整系列"""
 
-jpn_money_definitions="""
+jpn_money_definitions = """
     | `cpi`: 消費者物価指数
     |   * 2015年の値を`100`
     |   * 季節調整済み
@@ -89,7 +90,7 @@ jpn_money_definitions="""
     | ＜出典＞
     | OECD Main Economic Indicators"""
 
-world_money_definitions="""
+world_money_definitions = """
     | `iso`: ISO国コード
     | `country`: 国名
     | `year`: 年
@@ -113,7 +114,7 @@ world_money_definitions="""
     | World Bank Development Indicators"""
 
 
-ex_definitions="""
+ex_definitions = """
     | `real_ex_geus_%change`: 独マルク/米ドル実質為替レート変動率（％）
     |                           * 月次，季節調整ない
     | `real_ex_jpus_%change`: 円/米ドル実質為替レート変動率（％）
@@ -133,20 +134,20 @@ ex_definitions="""
     | ＜出典＞
     | OECD Main Economic Indicators"""
 
-dates_definitions="""
+dates_definitions = """
     | `tani1`: １つの循環における第１の谷
     | `yama`:  １つの循環における山
     | `tani2`: １つの循環における第２の谷
     | `expansion`: 拡張期の期間（単位：月）
-    |              `tani1`から`yama`までの期間 
+    |              `tani1`から`yama`までの期間
     | `contraction`: 後退期の期間（単位：月）
-    |                `yama`から`tani2`までの期間 
+    |                `yama`から`tani2`までの期間
     |
     | ＜出典＞
     |   * 内閣府
     |   * https://www.esri.cao.go.jp/jp/stat/di/hiduke.html"""
 
-bigmac_definitions="""
+bigmac_definitions = """
     | `year`: 年（2000年〜2023年）
     | `country`: 国名
     | `iso`: ISO国コード
@@ -160,7 +161,9 @@ bigmac_definitions="""
     | ＜出典＞
     | https://github.com/TheEconomist/big-mac-data (Copyright The Economist)"""
 
-# ===== Helper functions =======================================================================
+
+# ===== Helper functions ======================================================
+
 
 def _get_path(f):
     return split(abspath(f))[0]
@@ -168,15 +171,18 @@ def _get_path(f):
 
 def _mad_definitions():
 
-    df = pd.read_csv(join(_get_path(__file__), "data/mad_definitions.csv")).iloc[[16,17,18],[0,1]]
-    df.columns = ['vars','Definitions']
+    df = pd.read_csv(join(_get_path(__file__),
+                          "data/mad_definitions.csv")
+                     ).iloc[[16, 17, 18], [0, 1]]
+    df.columns = ['vars', 'Definitions']
     df = df.set_index('vars')
     df.index.name = ''
 
     return df
 
 
-# ===== Non-data-related functions ==========================================================================
+# ===== Non-data-related functions ============================================
+
 
 def trend(s, lamb=1600):
     """|
@@ -194,7 +200,6 @@ def trend(s, lamb=1600):
     return hpfilter(s.dropna(), lamb=lamb)[1]
 
 
-
 def show(df):
     """|
        | 引数：DetaFrame
@@ -203,7 +208,10 @@ def show(df):
        |
        | 例：py4macro.show(＜DataFrame＞)"""
 
-    with pd.option_context('display.max_colwidth', None, 'display.max_rows', None):
+    with pd.option_context('display.max_colwidth',
+                           None,
+                           'display.max_rows',
+                           None):
         display(df)
 
 
@@ -214,14 +222,15 @@ def xvalues(l, h, n):
         n：作成する数値の数を指定する（正の整数型，number of values）
     戻り値
         n個の要素から構成されるリスト"""
-    
-    if ( n<=1 ) or ( not isinstance(n, int) ):
+
+    if (n <= 1) or (not isinstance(n, int)):
         raise Exception(f"引数 n には2以上の整数型を使う必要があります。n={n}となっています。")
-    elif l>=h:
-        raise Exception(f"引数 l と h の値では l>h もしくは l=h となります。l<h となるように値を設定し直してください。")
+    elif l >= h:
+        raise Exception(
+            "引数 l と h の値では l>h もしくは l=h となります。l<h となるように値を設定し直してください。"
+        )
     else:
         return [l + x*(h-l)/(n-1) for x in range(n)]
-
 
 
 def fukyo(ax, color='k', alpha=0.1):
@@ -254,18 +263,23 @@ def fukyo(ax, color='k', alpha=0.1):
     ax[1].plot(...)
     fukyo(ax[0], color='grey', alpha=0.2)
     """
-    
-    df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"), index_col='index', parse_dates=True, compression="bz2", dtype={'expansion':'Int64','contraction':'Int64'})
-    
+
+    df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"),
+                     index_col='index',
+                     parse_dates=True,
+                     compression="bz2",
+                     dtype={'expansion': 'Int64', 'contraction': 'Int64'})
+
     for i in df.index[8:]:
-        start = df.loc[i,'yama']
-        end = df.loc[i,'tani2']
-        ax.axvspan(start, end, fill=True, linewidth=0, color=color, alpha=alpha)
-    # return ax     
+        start = df.loc[i, 'yama']
+        end = df.loc[i, 'tani2']
+        ax.axvspan(start, end, fill=True, linewidth=0,
+                   color=color, alpha=alpha)
+    # return ax
 
 
+# ===== Decorator =============================================================
 
-# ===== Decorator ==========================================================================
 
 def recessions(color='k', alpha=0.1):
     """
@@ -312,23 +326,26 @@ def recessions(color='k', alpha=0.1):
         ax[0].plot(...)
         ax[1].plot(...)
         return ax       # この行は必須"""
-    
-    df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"), index_col='index', parse_dates=True, compression="bz2", dtype={'expansion':'Int64','contraction':'Int64'})
+
+    df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"),
+                     index_col='index', parse_dates=True, compression="bz2",
+                     dtype={'expansion': 'Int64', 'contraction': 'Int64'})
 
     def _recessions(func):
-    
+
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            
+
             ax = func(*args, **kwargs)
-            
+
             # 図が一つの場合，軸はそのまま返される
             if not isinstance(ax, np.ndarray):
                 for i in df.index[8:]:
-                    start = df.loc[i,'yama']
-                    end = df.loc[i,'tani2']
-                    plt.axvspan(start, end, fill=True, linewidth=0, color=color, alpha=alpha)
-                return ax     
+                    start = df.loc[i, 'yama']
+                    end = df.loc[i, 'tani2']
+                    plt.axvspan(start, end, fill=True, linewidth=0,
+                                color=color, alpha=alpha)
+                return ax
 
             # 図が複数の場合，軸はarrayとして返される
             # DataFrame.plot()で縦に並べる場合，軸は１次元配列となる
@@ -336,10 +353,11 @@ def recessions(color='k', alpha=0.1):
                 n = len(ax)
                 for r in range(n):
                     for i in df.index[8:]:
-                        start = df.loc[i,'yama']
-                        end = df.loc[i,'tani2']
-                        ax[r].axvspan(start, end, fill=True, linewidth=0, color=color, alpha=alpha)
-                return ax     
+                        start = df.loc[i, 'yama']
+                        end = df.loc[i, 'tani2']
+                        ax[r].axvspan(start, end, fill=True, linewidth=0,
+                                      color=color, alpha=alpha)
+                return ax
 
             # 軸のarrayが2次元配列となる場合
             elif ax.ndim > 1:
@@ -348,26 +366,130 @@ def recessions(color='k', alpha=0.1):
                 for r in range(row):
                     for c in range(col):
                         for i in df.index[8:]:
-                            start = df.loc[i,'yama']
-                            end = df.loc[i,'tani2']
-                            ax[r,c].axvspan(start, end, fill=True, linewidth=0, color=color, alpha=alpha)
-                return ax     
+                            start = df.loc[i, 'yama']
+                            end = df.loc[i, 'tani2']
+                            ax[r, c].axvspan(start, end, fill=True,
+                                             linewidth=0, color=color,
+                                             alpha=alpha)
+                return ax
 
         return wrapper
 
     return _recessions
 
 
-# ===== Data-related function ==========================================================================
+# ===== What function (show attributes) =======================================
+
+
+def _create_template(obj, col, width):
+    """
+    表示用のテンプレートを作成する関数
+
+    引数：
+        obj: 属性を調べるオブジェクト
+        col: 表示する際の列の数
+        width: 表示の幅
+        　　　　　(列の幅は width/col 以上である最小整数となる)
+    戻り値：
+        テンプレートを含む辞書
+            値：任意の行の列
+            値：テンプレートのリスト
+
+
+    例：3つの列があり，表示全体の幅は20
+
+　　    _create_template(obj_x, col=3, width=20)
+
+       ＜実行結果＞
+        {1: ['{0:7}'], 2: ['{0:7}', '{0:7}'], 3: ['{0:7}', '{0:7}', '{0:7}']}
+
+        キー：表示される行に列が1つしかない場合，2つしかない場合，３つある場合を表す。
+        値：.format()関数に使い，文字列を代入するためのテンプレート
+            値にある0は .format()関数を使う際の位置引数の値
+            値にある7は各列の幅を表す
+        (注意) width=20は実行結果の7の計算に使われている。
+    """
+
+    # set width of each column
+    col_width = ceil(width/col)
+
+    # template for each column
+    temp = ["{" + str(0) + ":" + str(col_width) + "}"]
+
+    # create templates for rows
+    # with one column, two columns, three columns,...
+    template_dic = {}
+
+    for i in range(1, col+1):
+
+        template_dic[i] = temp * i
+
+    return template_dic
+
+
+def what(obj, col=5, width=70):
+    """
+    オブジェクトの属性を表示する
+
+    引数：
+        obj: 属性を調べるオブジェクト
+        col: 表示する際の列の数（デフォルトは5）
+        width: 表示の幅（デフォルトは70）
+        　　　　　(列の幅は width/col 以上である最小整数となる)
+    戻り値：
+        None (表示のみ)
+
+
+    例：整数型である100の属性を調べる。列は4と指定する。
+
+        what(100, col=4)
+
+        ＜実行結果＞
+
+        as_integer_ratio  bit_count         bit_length        conjugate
+        denominator       from_bytes        imag              numerator
+        real              to_bytes
+    """
+
+    lst = [i for i in dir(obj) if i[0] != "_"]
+
+    # create a list of lists
+    new_lst = []
+    for i in range(ceil(len(lst)/col)):
+        new_lst.append(lst[i*col:i*col+col])
+
+    # create templates for inserting texts
+    template = _create_template(obj, col=col, width=width)
+
+    # print each line of attributes
+    for inner_lst in new_lst:
+
+        num = len(inner_lst)
+
+        # create a new inner list with inserted text
+        inner_lst_new = []
+        for idx, j in enumerate(template[num]):
+            inner_lst_new.append(j.format(inner_lst[idx]))
+
+        # create concatenated strings for a line to print
+        line_str = ""
+        for e in inner_lst_new:
+            line_str += e
+
+        print(line_str)
+
+
+# ===== Data-related function =================================================
+
 
 def data(dataset=None, description=0):
     """|
        | 引数：
        |     dataset: (文字列)
-       |         'pwt':   Penn World Table 10.01
-       |         'weo':   IMF World Economic Outlook 2021
-       |         'mad':   country data of Maddison Project Database 2020
-       |         'mad-regions':   regional data of Maddison Project Database 2020
+       |         'pwt': Penn World Table 10.01
+       |         'weo': IMF World Economic Outlook 2021
+       |         'mad': country data of Maddison Project Database 2020
+       |         'mad-regions': regional data of Maddison Project Database 2020
        |         'jpn-q': 日本の四半期データ（GDPなど）
        |         'jpn-money': 日本の四半期データ（マネーストックなど）
        |         'world-money': 177ヵ国のマネーストックなど
@@ -406,7 +528,7 @@ def data(dataset=None, description=0):
        |         -> IMF World Economic Outlookの変数の推定値の開始年のDataFrameを返す。
        |
        |
-       | ----- Penn World Tableについて ---------------------------------------------
+       | ----- Penn World Tableについて -------------------------------------------
        |
        | PWTには以下の列が追加されている。
        |
@@ -435,8 +557,8 @@ def data(dataset=None, description=0):
        |         North America
        |         South America"""
 
-
-    if dataset not in ['pwt','weo','mad','mad-regions','jpn-q','jpn-money','world-money','ex','dates','bigmac']:
+    if dataset not in ['pwt', 'weo', 'mad', 'mad-regions', 'jpn-q',
+                       'jpn-money', 'world-money', 'ex', 'dates', 'bigmac']:
         try:
             raise ValueError("""次の内１つを選んでください。
     'pwt': Penn World Table 10.01
@@ -452,29 +574,30 @@ def data(dataset=None, description=0):
         except ValueError as e:
             print(e)
 
-    # Penn World Table ----------------------------------------------------------------------
-    elif (dataset=='pwt') & (description==0):
-        return pd.read_csv(join(_get_path(__file__), "data/pwt_data.csv.bz2"), compression="bz2")
+    # Penn World Table --------------------------------------------------------
+    elif (dataset == 'pwt') & (description == 0):
+        return pd.read_csv(join(_get_path(__file__),
+                                "data/pwt_data.csv.bz2"), compression="bz2")
 
-
-    elif (dataset=='pwt') & (description==1):
+    elif (dataset == 'pwt') & (description == 1):
         df = pd.read_csv(join(_get_path(__file__), "data/pwt_definitions.csv")
-                ).iloc[:,[0,1]].dropna(subset=['Variable name']).set_index('Variable name')
+                         ).iloc[:, [0, 1]].dropna(subset=['Variable name']
+                                                  ).set_index('Variable name')
         df.index.name = ''
 
-        with pd.option_context('display.max_colwidth', None, 'display.max_rows', None):
+        with pd.option_context('display.max_colwidth', None,
+                               'display.max_rows', None):
             display(df)
 
-
-    elif (dataset=='pwt') & (description==2):
+    elif (dataset == 'pwt') & (description == 2):
         df = pd.read_csv(join(_get_path(__file__), "data/pwt_definitions.csv")
-                ).iloc[:,[0,1]].dropna(subset=['Variable name']).set_index('Variable name')
+                         ).iloc[:, [0, 1]].dropna(subset=['Variable name']
+                                                  ).set_index('Variable name')
         df.index.name = ''
 
         return df
 
-
-    elif (dataset=='pwt') & (description not in [0,1,2]):
+    elif (dataset == 'pwt') & (description not in [0, 1, 2]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame (デフォルト)
@@ -483,62 +606,72 @@ def data(dataset=None, description=0):
         except ValueError as e:
             print(e)
 
-
-    # IMF World Economic Outlook ------------------------------------------------------------
-    elif (dataset=='weo') & (description==0):
-        df = pd.read_csv(join(_get_path(__file__), "data/WEOApr2021all.csv.bz2"),
+    # IMF World Economic Outlook ----------------------------------------------
+    elif (dataset == 'weo') & (description == 0):
+        df = pd.read_csv(join(_get_path(__file__),
+                              "data/WEOApr2021all.csv.bz2"),
                          compression="bz2", thousands=',', na_values='--')
-        df = df.dropna(subset=['ISO']).pivot(index=['ISO','Country'],
-                                             columns='WEO Subject Code',
-                                             values=[str(x) for x in range(1980,2027)]
-                                            ).stack(level=0
-                                                   ).reset_index().rename(columns={'level_2':'year',
-                                                                                           'Country':'country',
-                                                                                           'ISO':'countrycode'}
-                                                                         ).sort_values(['countrycode','year'])
+
+        df = df.dropna(subset=['ISO']
+                       ).pivot(index=['ISO', 'Country'],
+                               columns='WEO Subject Code',
+                               values=[str(x) for x in range(1980, 2027)]
+                               ).stack(level=0
+                                       ).reset_index(
+
+                                        ).rename(columns={'level_2': 'year',
+                                                          'Country': 'country',
+                                                          'ISO': 'countrycode'}
+                                                 ).sort_values(['countrycode',
+                                                                'year'])
         df.columns.name = ''
         df['year'] = df['year'].astype(int)
 
         return df
 
-
-    elif (dataset=='weo') & (description==1):
-        df = pd.read_csv(join(_get_path(__file__), "data/WEOApr2021all.csv.bz2"), compression="bz2")
-        jp = df.query('Country=="Japan"').iloc[:,[2,4,5,6,7]].set_index('WEO Subject Code').sort_index()
+    elif (dataset == 'weo') & (description == 1):
+        df = pd.read_csv(join(_get_path(__file__),
+                              "data/WEOApr2021all.csv.bz2"), compression="bz2")
+        jp = df.query('Country=="Japan"'
+                      ).iloc[:, [2, 4, 5, 6, 7]].set_index('WEO Subject Code'
+                                                           ).sort_index()
         jp.index.name = ''
-        jp = jp.rename(columns = {i:i.upper() for i in df.columns})
+        jp = jp.rename(columns={i: i.upper() for i in df.columns})
 
-        with pd.option_context('display.max_colwidth', None, 'display.max_rows', None):
+        with pd.option_context('display.max_colwidth', None,
+                               'display.max_rows', None):
             display(jp)
 
-
-    elif (dataset=='weo') & (description==2):
-        df = pd.read_csv(join(_get_path(__file__), "data/WEOApr2021all.csv.bz2"), compression="bz2")
-        jp = df.query('Country=="Japan"').iloc[:,[2,4,5,6,7]].set_index('WEO Subject Code').sort_index()
+    elif (dataset == 'weo') & (description == 2):
+        df = pd.read_csv(join(_get_path(__file__),
+                              "data/WEOApr2021all.csv.bz2"), compression="bz2")
+        jp = df.query('Country=="Japan"'
+                      ).iloc[:, [2, 4, 5, 6, 7]].set_index('WEO Subject Code'
+                                                           ).sort_index()
         jp.index.name = ''
-        jp = jp.rename(columns = {i:i.upper() for i in df.columns})
+        jp = jp.rename(columns={i: i.upper() for i in df.columns})
 
         return jp
 
-
-    elif (dataset=='weo') & (description==-1):
-        df = pd.read_csv(join(_get_path(__file__), "data/WEOApr2021all.csv.bz2"),
+    elif (dataset == 'weo') & (description == -1):
+        df = pd.read_csv(join(_get_path(__file__),
+                              "data/WEOApr2021all.csv.bz2"),
                          compression="bz2", thousands=',', na_values='--')
-        df = df.iloc[:,[1,2,3,-1]].dropna()
+        df = df.iloc[:, [1, 2, 3, -1]].dropna()
 
-        with pd.option_context('display.max_colwidth', None, 'display.max_rows', None):
+        with pd.option_context('display.max_colwidth', None,
+                               'display.max_rows', None):
             display(df)
 
-
-    elif (dataset=='weo') & (description==-2):
-        df = pd.read_csv(join(_get_path(__file__), "data/WEOApr2021all.csv.bz2"),
+    elif (dataset == 'weo') & (description == -2):
+        df = pd.read_csv(join(_get_path(__file__),
+                              "data/WEOApr2021all.csv.bz2"),
                          compression="bz2", thousands=',', na_values='--')
-        df = df.iloc[:,[1,2,3,-1]].dropna()
+        df = df.iloc[:, [1, 2, 3, -1]].dropna()
 
         return df
 
-
-    elif (dataset=='weo') & (description not in [-2,-1,0,1,2]):
+    elif (dataset == 'weo') & (description not in [-2, -1, 0, 1, 2]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame (デフォルト)
@@ -549,17 +682,17 @@ def data(dataset=None, description=0):
         except ValueError as e:
             print(e)
 
-    # Maddison Project (Countries) -----------------------------------------------------------
-    elif (dataset=='mad') & (description==0):
-        return pd.read_csv(join(_get_path(__file__), "data/mad_country.csv.bz2"),
-                           compression="bz2", thousands=',').sort_values(['countrycode','year'])
+    # Maddison Project (Countries) --------------------------------------------
+    elif (dataset == 'mad') & (description == 0):
+        return pd.read_csv(join(_get_path(__file__),
+                                "data/mad_country.csv.bz2"),
+                           compression="bz2", thousands=','
+                           ).sort_values(['countrycode', 'year'])
 
-
-    elif (dataset=='mad') & (description==1):
+    elif (dataset == 'mad') & (description == 1):
         return _mad_definitions()
 
-
-    elif (dataset=='mad') & (description not in [0,1]):
+    elif (dataset == 'mad') & (description not in [0, 1]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame (デフォルト)
@@ -567,33 +700,41 @@ def data(dataset=None, description=0):
         except ValueError as e:
             print(e)
 
-    # Maddison Project (Regions) -------------------------------------------------------------
-    elif (dataset=='mad-regions') & (description==0):
+    # Maddison Project (Regions) ----------------------------------------------
+    elif (dataset == 'mad-regions') & (description == 0):
 
         # GDPpc DataFrame
-        df_gdppc = pd.read_csv(join(_get_path(__file__), "data/mad_regions.csv"),
-                               thousands=',', skiprows=[0,2], usecols=list(range(9))+[18])
-        df_gdppc = pd.melt(df_gdppc, id_vars=['Region'], value_vars=df_gdppc.columns[1:])
-        df_gdppc = df_gdppc.rename(columns={'Region':'year','variable':'regions', 'value':'gdppc'})
+        df_gdppc = pd.read_csv(join(_get_path(__file__),
+                                    "data/mad_regions.csv"),
+                               thousands=',', skiprows=[0, 2],
+                               usecols=list(range(9))+[18])
+        df_gdppc = pd.melt(df_gdppc, id_vars=['Region'],
+                           value_vars=df_gdppc.columns[1:])
+        df_gdppc = df_gdppc.rename(columns={'Region': 'year',
+                                            'variable': 'regions',
+                                            'value': 'gdppc'})
 
         # # Population DataFrame
         df_pop = pd.read_csv(join(_get_path(__file__), "data/mad_regions.csv"),
-                             thousands=',', skiprows=[0,2], usecols=[0]+list(range(9,18)))
-        df_pop.columns = df_pop.columns.str.replace('.1','', regex=False)
-        df_pop = pd.melt(df_pop, id_vars=['Region'], value_vars=df_pop.columns[1:])
-        df_pop = df_pop.rename(columns={'Region':'year', 'variable':'regions', 'value':'pop'})
+                             thousands=',', skiprows=[0, 2],
+                             usecols=[0]+list(range(9, 18)))
+        df_pop.columns = df_pop.columns.str.replace('.1', '', regex=False)
+        df_pop = pd.melt(df_pop, id_vars=['Region'],
+                         value_vars=df_pop.columns[1:])
+        df_pop = df_pop.rename(columns={'Region': 'year',
+                                        'variable': 'regions',
+                                        'value': 'pop'})
 
         # merge
-        df = pd.merge(df_gdppc, df_pop, left_on=['regions','year'], right_on=['regions','year'])
+        df = pd.merge(df_gdppc, df_pop, left_on=['regions', 'year'],
+                      right_on=['regions', 'year'])
 
-        return df.iloc[:,[1,0,2,3]].sort_values(['regions','year'])
+        return df.iloc[:, [1, 0, 2, 3]].sort_values(['regions', 'year'])
 
-
-    elif (dataset=='mad-regions') & (description==1):
+    elif (dataset == 'mad-regions') & (description == 1):
         return _mad_definitions()
 
-
-    elif (dataset=='mad-regions') & (description not in [0,1]):
+    elif (dataset == 'mad-regions') & (description not in [0, 1]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame
@@ -602,15 +743,19 @@ def data(dataset=None, description=0):
             print(e)
 
     # 日本の四半期データ（GDPなど）-------------------------------------------------------
-    elif (dataset=='jpn-q') & (description==0):
-        df = pd.read_csv(join(_get_path(__file__), "data/jpn_quarterly.csv.bz2"), index_col='index', parse_dates=True, compression="bz2")
+    elif (dataset == 'jpn-q') & (description == 0):
+        df = pd.read_csv(join(_get_path(__file__),
+                              "data/jpn_quarterly.csv.bz2"),
+                         index_col='index',
+                         parse_dates=True,
+                         compression="bz2")
         df.index.name = ''
         return df
 
-    elif (dataset=='jpn-q') & (description==1):
+    elif (dataset == 'jpn-q') & (description == 1):
         print(jpn_q_definitions)
 
-    elif (dataset=='jpn-q') & (description not in [0,1]):
+    elif (dataset == 'jpn-q') & (description not in [0, 1]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame
@@ -619,15 +764,17 @@ def data(dataset=None, description=0):
             print(e)
 
     # 日本の四半期データ（マネーストックなど）-----------------------------------------
-    elif (dataset=='jpn-money') & (description==0):
-        df = pd.read_csv(join(_get_path(__file__), "data/jpn_money.csv.bz2"), index_col='date', parse_dates=True, compression="bz2")
+    elif (dataset == 'jpn-money') & (description == 0):
+        df = pd.read_csv(join(_get_path(__file__),
+                              "data/jpn_money.csv.bz2"),
+                         index_col='date', parse_dates=True, compression="bz2")
         df.index.name = ''
         return df
 
-    elif (dataset=='jpn-money') & (description==1):
+    elif (dataset == 'jpn-money') & (description == 1):
         print(jpn_money_definitions)
 
-    elif (dataset=='jpn-money') & (description not in [0,1]):
+    elif (dataset == 'jpn-money') & (description not in [0, 1]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame
@@ -636,14 +783,15 @@ def data(dataset=None, description=0):
             print(e)
 
     # 177ヵ国のマネーストックなど -----------------------------------------------------
-    elif (dataset=='world-money') & (description==0):
-        df = pd.read_csv(join(_get_path(__file__), "data/world_money.csv.bz2"), compression="bz2")
+    elif (dataset == 'world-money') & (description == 0):
+        df = pd.read_csv(join(_get_path(__file__), "data/world_money.csv.bz2"),
+                         compression="bz2")
         return df
 
-    elif (dataset=='world-money') & (description==1):
+    elif (dataset == 'world-money') & (description == 1):
         print(world_money_definitions)
 
-    elif (dataset=='world-money') & (description not in [0,1]):
+    elif (dataset == 'world-money') & (description not in [0, 1]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame
@@ -652,15 +800,19 @@ def data(dataset=None, description=0):
             print(e)
 
     # 円/ドル為替レートなど -----------------------------------------------------
-    elif (dataset=='ex') & (description==0):
-        df = pd.read_csv(join(_get_path(__file__), "data/real_ex_rate.csv.bz2"), index_col='index', parse_dates=True, compression="bz2")
+    elif (dataset == 'ex') & (description == 0):
+        df = pd.read_csv(join(_get_path(__file__),
+                              "data/real_ex_rate.csv.bz2"),
+                         index_col='index',
+                         parse_dates=True,
+                         compression="bz2")
         df.index.name = ''
         return df
 
-    elif (dataset=='ex') & (description==1):
+    elif (dataset == 'ex') & (description == 1):
         print(ex_definitions)
 
-    elif (dataset=='ex') & (description not in [0,1]):
+    elif (dataset == 'ex') & (description not in [0, 1]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame
@@ -669,15 +821,19 @@ def data(dataset=None, description=0):
             print(e)
 
     # 景気循環日付など -----------------------------------------------------
-    elif (dataset=='dates') & (description==0):
-        df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"), index_col='index', parse_dates=True, compression="bz2", dtype={'expansion':'Int64','contraction':'Int64'})
+    elif (dataset == 'dates') & (description == 0):
+        df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"),
+                         index_col='index',
+                         parse_dates=True,
+                         compression="bz2",
+                         dtype={'expansion': 'Int64', 'contraction': 'Int64'})
         df.index.name = ''
         return df
 
-    elif (dataset=='dates') & (description==1):
+    elif (dataset == 'dates') & (description == 1):
         print(dates_definitions)
 
-    elif (dataset=='dates') & (description not in [0,1]):
+    elif (dataset == 'dates') & (description not in [0, 1]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame
@@ -686,15 +842,18 @@ def data(dataset=None, description=0):
             print(e)
 
     # Big Mac Index -----------------------------------------------------
-    elif (dataset=='bigmac') & (description==0):
-        df = pd.read_csv(join(_get_path(__file__), "data/bigmac.csv.bz2"), index_col='index', compression="bz2", dtype={'expansion':'Int64','contraction':'Int64'})
+    elif (dataset == 'bigmac') & (description == 0):
+        df = pd.read_csv(join(_get_path(__file__), "data/bigmac.csv.bz2"),
+                         index_col='index',
+                         compression="bz2",
+                         dtype={'expansion': 'Int64', 'contraction': 'Int64'})
         df.index.name = ''
         return df
 
-    elif (dataset=='bigmac') & (description==1):
+    elif (dataset == 'bigmac') & (description == 1):
         print(bigmac_definitions)
 
-    elif (dataset=='bigmac') & (description not in [0,1]):
+    elif (dataset == 'bigmac') & (description not in [0, 1]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame
@@ -702,6 +861,6 @@ def data(dataset=None, description=0):
         except ValueError as e:
             print(e)
 
-    # Otherwise ------------------------------------------------------------------------
+    # Otherwise ---------------------------------------------------------------
     else:
         pass
