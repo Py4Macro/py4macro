@@ -97,7 +97,7 @@ py4macro.see(obj, col=4, width=70)
 
 例：整数型である100の属性を調べる。
 
-see(100)
+`see(100)`
 
 ```
 >>> .as_integer_ratio   .bit_count       .bit_length      .conjugate
