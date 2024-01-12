@@ -61,7 +61,7 @@ v0.2.1, 2021-05-21
 v0.2.0, 2021-05-10
 * DataFrameを全て表示する`show()`関数, 
 * 変数の定義の`DataFrame`
-* Penn World Talbe is combined with regions, income groups, etc
+* Penn World Table is combined with regions, income groups, etc
 
 v0.1.4, 2021-05-09
 * bug fixed (pwt-definitions.csv not found).
