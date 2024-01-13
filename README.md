@@ -83,7 +83,7 @@ py4macro.xvalues(l, h, n)
 
 ## オブジェクトの属性（`_`もしくは`__`が付いた属性以外）を表示する
 
-py4macro.see(obj, col=4, width=70)
+`py4macro.see(obj, col=4, width=70)`
 
 引数：
 * obj: 属性を調べるオブジェクト
@@ -97,7 +97,7 @@ py4macro.see(obj, col=4, width=70)
 
 例：整数型である100の属性を調べる。
 
-`see(100)`
+`py4macro.see(100)`
 
 ```
 >>> .as_integer_ratio   .bit_count       .bit_length      .conjugate
