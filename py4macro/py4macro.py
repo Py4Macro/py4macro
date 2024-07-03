@@ -565,8 +565,8 @@ def data(dataset=None, description=0):
             raise ValueError("""次の内１つを選んでください。
     'pwt': Penn World Table 10.01
     'weo': IMF World Economic Outlook 2021
-    'mad': country data of Maddison Project Database 2020
-    'mad-region': regional data of Maddison Project Database 2020
+    'mad': country data of Maddison Project Database 2023
+    'mad-region': regional data of Maddison Project Database 2023
     'jpn-q': 日本の四半期データ（GDPなど）
     'jpn-money': 日本の四半期データ（マネーストックなど）
     'world-money': 177ヵ国のマネーストックなど
