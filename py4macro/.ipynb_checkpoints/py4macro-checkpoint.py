@@ -161,27 +161,24 @@ bigmac_definitions = """
     | ＜出典＞
     | https://github.com/TheEconomist/big-mac-data (Copyright The Economist)"""
 
-mad_definitions = """
-    | `GDP pc`: Real GDP per capita in 2011$
-    | `Population`: Population, mid-year (thousands)
-    | `Regional data`: Regional GDP per capita and population estimates
-    |
-    | * `GDP pc`が欠損値の行は全て削除している。
-    |
-    | ＜出典＞
-    | Maddison Project Database 2023
-    |
-    | https://www.rug.nl/ggdc/historicaldevelopment/maddison/releases/maddison-project-database-2023
-    |
-    | Bolt, Jutta, and Jan Luiten van Zanden (2024) "Maddison-style estimates of
-    | the evolution of the world economy: A new 2023 update." Journal of Economic
-    | Surveys, pp.1-41."""
 
 # ===== Helper functions ======================================================
 
 
 def _get_path(f):
     return split(abspath(f))[0]
+
+
+def _mad_definitions():
+
+    df = pd.read_csv(join(_get_path(__file__),
+                          "data/mad_definitions.csv")
+                     ).iloc[[16, 17, 18], [0, 1]]
+    df.columns = ['vars', 'Definitions']
+    df = df.set_index('vars')
+    df.index.name = ''
+
+    return df
 
 
 # ===== Non-data-related functions ============================================
@@ -491,7 +488,7 @@ def data(dataset=None, description=0):
        |         'pwt': Penn World Table 10.01
        |         'weo': IMF World Economic Outlook 2021
        |         'mad': country data of Maddison Project Database 2020
-       |         'mad-region': regional data of Maddison Project Database 2020
+       |         'mad-regions': regional data of Maddison Project Database 2020
        |         'jpn-q': 日本の四半期データ（GDPなど）
        |         'jpn-money': 日本の四半期データ（マネーストックなど）
        |         'world-money': 177ヵ国のマネーストックなど
@@ -559,14 +556,14 @@ def data(dataset=None, description=0):
        |         North America
        |         South America"""
 
-    if dataset not in ['pwt', 'weo', 'mad', 'mad-region', 'jpn-q',
+    if dataset not in ['pwt', 'weo', 'mad', 'mad-regions', 'jpn-q',
                        'jpn-money', 'world-money', 'ex', 'dates', 'bigmac']:
         try:
             raise ValueError("""次の内１つを選んでください。
     'pwt': Penn World Table 10.01
     'weo': IMF World Economic Outlook 2021
     'mad': country data of Maddison Project Database 2020
-    'mad-region': regional data of Maddison Project Database 2020
+    'mad-regions': regional data of Maddison Project Database 2020
     'jpn-q': 日本の四半期データ（GDPなど）
     'jpn-money': 日本の四半期データ（マネーストックなど）
     'world-money': 177ヵ国のマネーストックなど
@@ -692,7 +689,7 @@ def data(dataset=None, description=0):
                            ).sort_values(['countrycode', 'year'])
 
     elif (dataset == 'mad') & (description == 1):
-        print(mad_definitions)
+        return _mad_definitions()
 
     elif (dataset == 'mad') & (description not in [0, 1]):
         try:
@@ -702,17 +699,41 @@ def data(dataset=None, description=0):
         except ValueError as e:
             print(e)
 
-    # Maddison Project (regionsional data ----------------------------------------------
-    elif (dataset == 'mad-region') & (description == 0):
-        return pd.read_csv(join(_get_path(__file__),
-                                "data/mad_region.csv.bz2"),
-                           compression="bz2", thousands=','
-                           ).sort_values(['region', 'year'])
+    # Maddison Project (Regions) ----------------------------------------------
+    elif (dataset == 'mad-regions') & (description == 0):
 
-    elif (dataset == 'mad-region') & (description == 1):
-        print(mad_definitions)
+        # GDPpc DataFrame
+        df_gdppc = pd.read_csv(join(_get_path(__file__),
+                                    "data/mad_regions.csv"),
+                               thousands=',', skiprows=[0, 2],
+                               usecols=list(range(9))+[18])
+        df_gdppc = pd.melt(df_gdppc, id_vars=['Region'],
+                           value_vars=df_gdppc.columns[1:])
+        df_gdppc = df_gdppc.rename(columns={'Region': 'year',
+                                            'variable': 'regions',
+                                            'value': 'gdppc'})
 
-    elif (dataset == 'mad-region') & (description not in [0, 1]):
+        # # Population DataFrame
+        df_pop = pd.read_csv(join(_get_path(__file__), "data/mad_regions.csv"),
+                             thousands=',', skiprows=[0, 2],
+                             usecols=[0]+list(range(9, 18)))
+        df_pop.columns = df_pop.columns.str.replace('.1', '', regex=False)
+        df_pop = pd.melt(df_pop, id_vars=['Region'],
+                         value_vars=df_pop.columns[1:])
+        df_pop = df_pop.rename(columns={'Region': 'year',
+                                        'variable': 'regions',
+                                        'value': 'pop'})
+
+        # merge
+        df = pd.merge(df_gdppc, df_pop, left_on=['regions', 'year'],
+                      right_on=['regions', 'year'])
+
+        return df.iloc[:, [1, 0, 2, 3]].sort_values(['regions', 'year'])
+
+    elif (dataset == 'mad-regions') & (description == 1):
+        return _mad_definitions()
+
+    elif (dataset == 'mad-regions') & (description not in [0, 1]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame

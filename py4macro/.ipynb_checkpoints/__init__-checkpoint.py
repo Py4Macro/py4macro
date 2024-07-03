@@ -7,7 +7,7 @@ from .py4macro import *
 __all__ = ['data','trend','show','xvalues','recessions','fukyo', 'see']
 
 __author__ = 'Tetsu Haruyama'
-__version__ = '0.8.9'
+__version__ = '0.8.8'
 __copyright__ = 'Copyright (c) 2024 Tetsu Haruyama'
 
 __doc__ = """
@@ -22,7 +22,7 @@ __doc__ = """
         * データ・セット
             * Penn World Tables 10.1
             * IMF World Economic Outlook 2021
-            * Maddison Project Database 2023
+            * Maddison Project Database 2020
             * 日本の四半期データ（GDPなど）
             * 日本の月次データ（マネーストックなど）
             * 177ヵ国のマネーストックなど
