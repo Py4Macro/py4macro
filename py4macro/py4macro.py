@@ -84,7 +84,7 @@ jpn_money_definitions = """
     |   * 季節調整済み
     |
     | * 月次データ
-    | * 1955年1月〜2021年12月
+    | * 1955年1月〜2020年12月
     | * 行ラベル：毎月の最終日
     |
     | ＜出典＞
@@ -112,7 +112,6 @@ world_money_definitions = """
     |
     | ＜出典＞
     | World Bank Development Indicators"""
-
 
 ex_definitions = """
     | `real_ex_geus_%change`: 独マルク/米ドル実質為替レート変動率（％）
@@ -148,7 +147,7 @@ dates_definitions = """
     |   * https://www.esri.cao.go.jp/jp/stat/di/hiduke.html"""
 
 bigmac_definitions = """
-    | `year`: 年（2000年〜2023年）
+    | `year`: 年（2000年〜）
     | `country`: 国名
     | `iso`: ISO国コード
     | `currency_code`: 通貨コード
