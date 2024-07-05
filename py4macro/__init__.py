@@ -21,7 +21,7 @@ __doc__ = """
         * 後退期間にグレーの塗りつぶしを追加する`recessions()`デコレーター
         * データ・セット
             * Penn World Tables 10.1
-            * IMF World Economic Outlook 2021
+            * IMF World Economic Outlook 2024
             * Maddison Project Database 2023
             * 日本の四半期データ（GDPなど）
             * 日本の月次データ（マネーストックなど）
