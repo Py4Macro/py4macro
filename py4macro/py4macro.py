@@ -147,12 +147,12 @@ dates_definitions = """
     |   * https://www.esri.cao.go.jp/jp/stat/di/hiduke.html"""
 
 bigmac_definitions = """
-    | `year`: 年（2000年〜）
-    | `country`: 国名
-    | `iso`: ISO国コード
+    | `year`:       年（2000年〜）
+    | `country`:    国名
+    | `iso`:        ISO国コード
     | `currency_code`: 通貨コード
     | `price_local`: Big Macの価格（自国通貨単位）
-    | `exr`: 名目為替レート（自国通貨単位/米ドル）
+    | `exr`:        名目為替レート（自国通貨単位/米ドル）
     | `gdppc_local`: 名目一人当たりGDP（自国通貨単位）
     |
     | * 年次データ
@@ -161,8 +161,8 @@ bigmac_definitions = """
     | https://github.com/TheEconomist/big-mac-data (Copyright The Economist)"""
 
 mad_definitions = """
-    | `GDP pc`: Real GDP per capita in 2011$
-    | `Population`: Population, mid-year (thousands)
+    | `GDP pc`:        Real GDP per capita in 2011$
+    | `Population`:    Population, mid-year (thousands)
     | `Regional data`: Regional GDP per capita and population estimates
     |
     | * `GDP pc`が欠損値の行は全て削除している。
@@ -177,14 +177,14 @@ mad_definitions = """
     | Surveys, pp.1-41."""
 
 debts_definitions = """
-    | `revenue`: Government revenue, percent of GDP
-    | `expenditure`: Government expenditure, percent of GDP
-    | `interest_exp`: Government interest expense, percent of GDP
+    | `revenue`:        Government revenue, percent of GDP
+    | `expenditure`:    Government expenditure, percent of GDP
+    | `interest_exp`:   Government interest expense, percent of GDP
     | `prim_expenditure`: Government primary expenditure, percent of GDP
-    | `prim_balance`: Government primary balance, percent of GDP
-    | `debt`: Government gross debt, percent of GDP
-    | `rltir`: Real long-term interest rate, percent
-    | `rgc`: Real GDP growth rate, percent
+    | `prim_balance`:   Government primary balance, percent of GDP
+    | `debt`:           Government gross debt, percent of GDP
+    | `rltir`:          Real long-term interest rate, percent
+    | `rgc`:            Real GDP growth rate, percent
     | `GG_budg`: sector coverage indicator for rev, exp, ie (0 for central gov't, 1 for general gov't)
     | `GG_debt`: sector coverage indicator for debt (0 for central gov't, 1 for general gov't)
     |
