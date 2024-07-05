@@ -488,7 +488,7 @@ def data(dataset=None, description=0):
        | 引数：
        |     dataset: (文字列)
        |         'pwt': Penn World Table 10.01
-       |         'weo': IMF World Economic Outlook 2021
+       |         'weo': IMF World Economic Outlook 2024
        |         'mad': country data of Maddison Project Database 2020
        |         'mad-region': regional data of Maddison Project Database 2020
        |         'jpn-q': 日本の四半期データ（GDPなど）
@@ -504,11 +504,7 @@ def data(dataset=None, description=0):
        |         1: 変数の定義を全て表示する
        |            * 全てのデータセット
        |         2: 変数の定義のDataFrameを返す
-       |            * `'pwt'`，`'weo'``'mad'`のみ
-       |        -1: 何年以降から予測値なのかを全て示す
-       |            * `'weo'`のみ
-       |        -2: 何年以降から予測値なのかを示すDataFrameを返す
-       |            * `'weo'`のみ
+       |            * `'pwt'`，`'weo'`のみ
        |
        | 返り値：
        |     DataFrame もしくは DataFrameの表示
@@ -521,12 +517,6 @@ def data(dataset=None, description=0):
        |
        | 例３：py4macro.data('weo', description=2)
        |         -> IMF World Economic Outlookの変数定義のDataFrameを返す。
-       |
-       | 例４：py4macro.data('weo', description=-1)
-       |         -> IMF World Economic Outlookの変数の推定値の開始年を全て表示する。
-       |
-       | 例５：py4macro.data('weo', description=-2)
-       |         -> IMF World Economic Outlookの変数の推定値の開始年のDataFrameを返す。
        |
        |
        | ----- Penn World Tableについて -------------------------------------------
@@ -563,7 +553,7 @@ def data(dataset=None, description=0):
         try:
             raise ValueError("""次の内１つを選んでください。
     'pwt': Penn World Table 10.01
-    'weo': IMF World Economic Outlook 2021
+    'weo': IMF World Economic Outlook 2024
     'mad': country data of Maddison Project Database 2023
     'mad-region': regional data of Maddison Project Database 2023
     'jpn-q': 日本の四半期データ（GDPなど）
@@ -610,76 +600,31 @@ def data(dataset=None, description=0):
     # IMF World Economic Outlook ----------------------------------------------
     elif (dataset == 'weo') & (description == 0):
         df = pd.read_csv(join(_get_path(__file__),
-                              "data/WEOApr2021all.csv.bz2"),
-                         compression="bz2", thousands=',', na_values='--')
-
-        df = df.dropna(subset=['ISO']
-                       ).pivot(index=['ISO', 'Country'],
-                               columns='WEO Subject Code',
-                               values=[str(x) for x in range(1980, 2027)]
-                               ).stack(level=0
-                                       ).reset_index(
-
-                                        ).rename(columns={'level_2': 'year',
-                                                          'Country': 'country',
-                                                          'ISO': 'countrycode'}
-                                                 ).sort_values(['countrycode',
-                                                                'year'])
-        df.columns.name = ''
-        df['year'] = df['year'].astype(int)
-
+                            "data/weo.csv.bz2"),
+                        compression="bz2")
         return df
 
     elif (dataset == 'weo') & (description == 1):
         df = pd.read_csv(join(_get_path(__file__),
-                              "data/WEOApr2021all.csv.bz2"), compression="bz2")
-        jp = df.query('Country=="Japan"'
-                      ).iloc[:, [2, 4, 5, 6, 7]].set_index('WEO Subject Code'
-                                                           ).sort_index()
-        jp.index.name = ''
-        jp = jp.rename(columns={i: i.upper() for i in df.columns})
-
-        with pd.option_context('display.max_colwidth', None,
-                               'display.max_rows', None):
-            display(jp)
-
-    elif (dataset == 'weo') & (description == 2):
-        df = pd.read_csv(join(_get_path(__file__),
-                              "data/WEOApr2021all.csv.bz2"), compression="bz2")
-        jp = df.query('Country=="Japan"'
-                      ).iloc[:, [2, 4, 5, 6, 7]].set_index('WEO Subject Code'
-                                                           ).sort_index()
-        jp.index.name = ''
-        jp = jp.rename(columns={i: i.upper() for i in df.columns})
-
-        return jp
-
-    elif (dataset == 'weo') & (description == -1):
-        df = pd.read_csv(join(_get_path(__file__),
-                              "data/WEOApr2021all.csv.bz2"),
-                         compression="bz2", thousands=',', na_values='--')
-        df = df.iloc[:, [1, 2, 3, -1]].dropna()
+                            "data/weo_description.csv.bz2"),
+                         compression="bz2")
 
         with pd.option_context('display.max_colwidth', None,
                                'display.max_rows', None):
             display(df)
-
-    elif (dataset == 'weo') & (description == -2):
+    
+    elif (dataset == 'weo') & (description == 2):
         df = pd.read_csv(join(_get_path(__file__),
-                              "data/WEOApr2021all.csv.bz2"),
-                         compression="bz2", thousands=',', na_values='--')
-        df = df.iloc[:, [1, 2, 3, -1]].dropna()
-
+                            "data/weo_description.csv.bz2"),
+                         compression="bz2")
         return df
 
-    elif (dataset == 'weo') & (description not in [-2, -1, 0, 1, 2]):
+    elif (dataset == 'weo') & (description not in [0, 1, 2]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame (デフォルト)
     1: 変数の定義を全て表示
-    2: 変数の定義のDataFrame
-   -1: 変数の推定値の開始年の表示
-   -2: 変数の推定値の開始年のDataFrame""")
+    2: 変数の定義のDataFrame""")
         except ValueError as e:
             print(e)
 

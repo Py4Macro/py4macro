@@ -3,6 +3,8 @@ v0.8.9, 2024-07-??
 * `mad`と`mad-region`のデータを更新
 * `bigmac`に2023年1月1日のデータまでに更新
 * `ex`を更新
+* `weo`をWEO2024に更新
+* `weo`の引数`description=-1`と`description=-2`は廃止
 
 v0.8.8, 2024-01-08
 * `see`関数を追加

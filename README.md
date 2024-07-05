@@ -16,7 +16,7 @@
 * 後退期間にグレーの塗りつぶしを追加する`recessions()`デコレーター
 * データ・セット
     * Penn World Tables 10.01
-    * IMF World Economic Outlook 2021
+    * IMF World Economic Outlook 2024
     * Maddison Project Database 2023
     * 日本の四半期データ（GDPなど）
     * 日本の四半期データ（マネーストックなど）
@@ -211,7 +211,7 @@ py4macro.data(dataset=None, description=0)
 
 * `dataset`: (文字列)
     * `'pwt'`:   Penn World Table 10.0
-    * `'weo'`:   IMF World Economic Outlook 2021
+    * `'weo'`:   IMF World Economic Outlook 2024
     * `'mad'`:   country data of Maddison Project Database 2020
     * `'mad-region'`:   regional data of Maddison Project Database 2020
     * `'jpn-q'`: 日本の四半期データ（GDPなど）
@@ -227,11 +227,7 @@ py4macro.data(dataset=None, description=0)
     * `1`: 変数の定義を全て表示する
         * 全てのデータセット
     * `2`: 変数の定義のDataFrameを返す
-        * `'pwt'`，`'weo'``'mad'`のみ
-    * `-1`: 何年以降から予測値なのかを全て示す
-        * `'weo'`のみ
-    * `-2`: 何年以降から予測値なのかを示すDataFrameを返す
-        * `'weo'`のみ
+        * `'pwt'`，`'weo'`のみ
 
 **返り値**：
     `DataFrame`もしくは`DataFrame`の表示
@@ -248,14 +244,6 @@ py4macro.data(dataset=None, description=0)
 例３：IMF World Economic Outlookの変数定義のDataFrameを返す
 
 `py4macro.data('weo',description=2)`
-
-例４：IMF World Economic Outlookの変数の推定値の開始年を全て表示する
-
-`py4macro.data('weo',description=-1)`
-
-例５：IMF World Economic Outlookの変数の推定値の開始年のDataFrameを返す
-
-`py4macro.data('weo',description=-2)`
 
 
 # インストール方法
