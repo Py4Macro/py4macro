@@ -352,19 +352,18 @@ def recessions(start=1980, end=2999, color='k', alpha=0.1):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
 
+            if start < 1951:
+                print('\n景気基準日付は1951年6月から始まります。\n')
+
             ax = func(*args, **kwargs)
 
             # 図が一つの場合，軸はそのまま返される
             if not isinstance(ax, np.ndarray):
 
-
-                if start < 1951:
-                    print('\n景気基準日付は1951年6月から始まります。\n')
-                    
                 yr_lst = df['yama'].astype(str).str[:4].astype(int)
                 cond = ( yr_lst >= start ) & ( yr_lst <= end )
                 df = df.loc[cond,:].reset_index(drop=True)
-                
+
                 for i in df.index:
                     yama = df.loc[i, 'yama']
                     tani = df.loc[i, 'tani2']
@@ -379,9 +378,6 @@ def recessions(start=1980, end=2999, color='k', alpha=0.1):
                 n = len(ax)
                 for r in range(n):
 
-                    if start < 1951:
-                        print('\n景気基準日付は1951年6月から始まります。\n')
-                        
                     yr_lst = df['yama'].astype(str).str[:4].astype(int)
                     cond = ( yr_lst >= start ) & ( yr_lst <= end )
                     df = df.loc[cond,:].reset_index(drop=True)
@@ -401,9 +397,6 @@ def recessions(start=1980, end=2999, color='k', alpha=0.1):
                 for r in range(row):
                     for c in range(col):
 
-                        if start < 1951:
-                            print('\n景気基準日付は1951年6月から始まります。\n')
-                            
                         yr_lst = df['yama'].astype(str).str[:4].astype(int)
                         cond = ( yr_lst >= start ) & ( yr_lst <= end )
                         df = df.loc[cond,:].reset_index(drop=True)
