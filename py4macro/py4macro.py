@@ -607,7 +607,7 @@ def data(dataset=None, description=0):
     elif (dataset == 'weo') & (description == 1):
         df = pd.read_csv(join(_get_path(__file__),
                             "data/weo_description.csv.bz2"),
-                         compression="bz2")
+                         compression="bz2").set_index("WEO Subject Code")
 
         with pd.option_context('display.max_colwidth', None,
                                'display.max_rows', None):
@@ -616,7 +616,7 @@ def data(dataset=None, description=0):
     elif (dataset == 'weo') & (description == 2):
         df = pd.read_csv(join(_get_path(__file__),
                             "data/weo_description.csv.bz2"),
-                         compression="bz2")
+                         compression="bz2").set_index("WEO Subject Code")
         return df
 
     elif (dataset == 'weo') & (description not in [0, 1, 2]):
