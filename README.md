@@ -110,10 +110,12 @@ py4macro.xvalues(l, h, n)
 * `fukyo()`関数は後退期間の塗りつぶしを追加する
 
 ```
-py4macro.fukyo(ax, color='k', alpha='0.1')
+py4macro.fukyo(ax, start=1980, end=2999, color='k', alpha='0.1')
 ```
 **引数**：
 * `ax`：`matplotlib`の軸
+* `start`：`fukyo()`関数を適用し始める年（デフォルトは`1980`）
+* `end`：`fukyo()`関数を適用し終わる年（デフォルトは`2999`）
 * `color`：色（デフォルトは黒）
 * `alpha`：透明度（デフォルトは`0.1`）
 
@@ -133,7 +135,7 @@ fukyo(ax)
 ＜例２：一つの図＞
 ```
 ax = <DataFrame もしくは Series>.plot()
-fukyo(ax, color='red')
+fukyo(ax, start=1960, color='red')
 ```
 
 ＜例３：複数の図の中で一つだけに追加＞
@@ -141,7 +143,7 @@ fukyo(ax, color='red')
 fig, ax = plt.subplots(2,1)
 ax[0].plot(...)
 ax[1].plot(...)
-fukyo(ax[0], color='grey', alpha=0.2)
+fukyo(ax[0], start=1970, end=2005, color='grey', alpha=0.2)
 ```
 
 
@@ -149,11 +151,13 @@ fukyo(ax[0], color='grey', alpha=0.2)
 * `@py4macro.recessions()`は全ての軸に後退期間の塗りつぶしを追加する
 
 ```
-@py4macro.recessions(color='k', alpha=0.1)
+@py4macro.recessions(start=1980, end=2999, color='k', alpha=0.1)
 ＜関数＞
 ```
 
 **引数**：
+* `start`：`fukyo()`関数を適用し始める年（デフォルトは`1980`）
+* `end`：`fukyo()`関数を適用し終わる年（デフォルトは`2999`）
 * `color`：色（デフォルトは黒）
 * `alpha`：透明度（デフォルトは`0.1）
 
@@ -167,7 +171,7 @@ def plot():
 
 ＜例２：一つの図をプロット（軸を返す）＞
 ```
-@py4macro.recessions(color='red')
+@py4macro.recessions(start=1960, color='red')
 def plot():
     ax = <DataFrame もしくは Series>.plot()
     return ax
@@ -175,7 +179,7 @@ def plot():
 
 ＜例３：一つの図をプロット＞
 ```
-@py4macro.recessions(alpha=0.9)
+@py4macro.recessions(end=2000, alpha=0.9)
 def plot():
     fig, ax = plt.subplots()
     ax.plot(...)
@@ -184,7 +188,7 @@ def plot():
 
 ＜例４：複数の図をプロット＞
 ```
-@py4macro.recessions(color='green', alpha=0.2)
+@py4macro.recessions(start=1975, color='green', alpha=0.2)
 def plot():
     ax = <DataFrame>.plot(subplots=True, layout=(2,2))
     return ax       # この行は必須
@@ -192,7 +196,7 @@ def plot():
 
 ＜例５：複数の図をプロット＞
 ```
-@py4macro.recessions(color='grey', alpha=0.3)
+@py4macro.recessions(start=1975, end=2010, color='grey', alpha=0.3)
 def plot():
     fig, ax = plt.subplots(2, 1)
     ax[0].plot(...)

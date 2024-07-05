@@ -235,7 +235,7 @@ def xvalues(l, h, n):
         return [l + x*(h-l)/(n-1) for x in range(n)]
 
 
-def fukyo(ax, color='k', alpha=0.1):
+def fukyo(ax, start=1980, end=2999, color='k', alpha=0.1):
     """
     * 横軸に`DatetimeIndex`を使うプロットに対して後退期間にグレーの塗りつぶしを追加する関数
     * `@py4macro.recessions`デコレーターとの違い
@@ -244,6 +244,8 @@ def fukyo(ax, color='k', alpha=0.1):
 
     引数：
         ax：`matplotlib`の軸
+        start：`fukyo()`関数を適用し始める年（デフォルトは`1980`）
+        end：`fukyo()`関数を適用し終わる年（デフォルトは`2999`）
         color：色（デフォルトは黒）
         alpha：透明度（デフォルトは`0.1）
 
@@ -257,13 +259,13 @@ def fukyo(ax, color='k', alpha=0.1):
 
     ＜例２：一つの図＞
     ax = <DataFrame もしくは Series>.plot()
-    fukyo(ax, color='red')
+    fukyo(ax, start=1960)
 
     ＜例３：複数の図の中で一つだけに追加＞
     fig, ax = plt.subplots(2,1)
     ax[0].plot(...)
     ax[1].plot(...)
-    fukyo(ax[0], color='grey', alpha=0.2)
+    fukyo(ax[0], start=1970, end=2000, color='grey', alpha=0.2)
 
     ＜景気基準日付＞ https://www.esri.cao.go.jp/jp/stat/di/hiduke.html"""
 
@@ -273,10 +275,17 @@ def fukyo(ax, color='k', alpha=0.1):
                      compression="bz2",
                      dtype={'expansion': 'Int64', 'contraction': 'Int64'})
 
-    for i in df.index[8:]:
-        start = df.loc[i, 'yama']
-        end = df.loc[i, 'tani2']
-        ax.axvspan(start, end, fill=True, linewidth=0,
+    if start < 1951:
+        print('\n景気基準日付は1951年6月から始まります。\n')
+        
+    yr_lst = df['yama'].astype(str).str[:4].astype(int)
+    cond = ( yr_lst >= start ) & ( yr_lst <= end )
+    df = df.loc[cond,:].reset_index(drop=True)
+    
+    for i in df.index:
+        yama = df.loc[i, 'yama']
+        tani = df.loc[i, 'tani2']
+        ax.axvspan(yama, tani, fill=True, linewidth=0,
                    color=color, alpha=alpha)
     # return ax
 
@@ -284,7 +293,7 @@ def fukyo(ax, color='k', alpha=0.1):
 # ===== Decorator =============================================================
 
 
-def recessions(color='k', alpha=0.1):
+def recessions(start=1980, end=2999, color='k', alpha=0.1):
     """
     * 横軸に`DatetimeIndex`を使うプロットに対して後退期間にグレーの塗りつぶしを追加するデコレーター
     * `fukyo()`関数との違い
@@ -292,6 +301,8 @@ def recessions(color='k', alpha=0.1):
         * `fukyo()`関数は個々の軸に塗りつぶしを追加する
 
     引数：
+        start：`fukyo()`関数を適用し始める年（デフォルトは`1980`）
+        end：`fukyo()`関数を適用し終わる年（デフォルトは`2999`）
         color：色（デフォルトは黒）
         alpha：透明度（デフォルトは`0.1）
 
@@ -304,13 +315,13 @@ def recessions(color='k', alpha=0.1):
         <DataFrame もしくは Series>.plot()
 
     ＜例２：一つの図をプロット（軸を返す）＞
-    @py4macro.recessions(color='r')
+    @py4macro.recessions(star=1960, color='r')
     def plot():
         ax = <DataFrame もしくは Series>.plot()
         return ax
 
     ＜例３：一つの図をプロット＞
-    @py4macro.recessions(alpha=0.5)
+    @py4macro.recessions(end=2005, alpha=0.5)
     def plot():
         fig, ax = plt.subplots()
         ax.plot(...)
@@ -323,7 +334,7 @@ def recessions(color='k', alpha=0.1):
         return ax       # この行は必須
 
     ＜例５：複数の図をプロット＞
-    @py4macro.recessions(color='grey', alpha=0.1)
+    @py4macro.recessions(start=1970, end=2015, color='grey', alpha=0.1)
     def plot():
         fig, ax = plt.subplots(2, 1)
         ax[0].plot(...)
@@ -331,7 +342,9 @@ def recessions(color='k', alpha=0.1):
         return ax       # この行は必須"""
 
     df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"),
-                     index_col='index', parse_dates=True, compression="bz2",
+                     index_col='index',
+                     parse_dates=['tani1','yama','tani2'],
+                     compression="bz2",
                      dtype={'expansion': 'Int64', 'contraction': 'Int64'})
 
     def _recessions(func):
@@ -343,11 +356,21 @@ def recessions(color='k', alpha=0.1):
 
             # 図が一つの場合，軸はそのまま返される
             if not isinstance(ax, np.ndarray):
-                for i in df.index[8:]:
-                    start = df.loc[i, 'yama']
-                    end = df.loc[i, 'tani2']
-                    plt.axvspan(start, end, fill=True, linewidth=0,
-                                color=color, alpha=alpha)
+
+
+                if start < 1951:
+                    print('\n景気基準日付は1951年6月から始まります。\n')
+                    
+                yr_lst = df['yama'].astype(str).str[:4].astype(int)
+                cond = ( yr_lst >= start ) & ( yr_lst <= end )
+                df = df.loc[cond,:].reset_index(drop=True)
+                
+                for i in df.index:
+                    yama = df.loc[i, 'yama']
+                    tani = df.loc[i, 'tani2']
+                    ax.axvspan(yama, tani, fill=True, linewidth=0,
+                               color=color, alpha=alpha)
+
                 return ax
 
             # 図が複数の場合，軸はarrayとして返される
@@ -355,11 +378,20 @@ def recessions(color='k', alpha=0.1):
             elif ax.ndim == 1:
                 n = len(ax)
                 for r in range(n):
-                    for i in df.index[8:]:
-                        start = df.loc[i, 'yama']
-                        end = df.loc[i, 'tani2']
-                        ax[r].axvspan(start, end, fill=True, linewidth=0,
-                                      color=color, alpha=alpha)
+
+                    if start < 1951:
+                        print('\n景気基準日付は1951年6月から始まります。\n')
+                        
+                    yr_lst = df['yama'].astype(str).str[:4].astype(int)
+                    cond = ( yr_lst >= start ) & ( yr_lst <= end )
+                    df = df.loc[cond,:].reset_index(drop=True)
+                    
+                    for i in df.index:
+                        yama = df.loc[i, 'yama']
+                        tani = df.loc[i, 'tani2']
+                        ax[r].axvspan(yama, tani, fill=True, linewidth=0,
+                                   color=color, alpha=alpha)
+
                 return ax
 
             # 軸のarrayが2次元配列となる場合
@@ -368,12 +400,19 @@ def recessions(color='k', alpha=0.1):
                 col = ax.shape[1]
                 for r in range(row):
                     for c in range(col):
-                        for i in df.index[8:]:
-                            start = df.loc[i, 'yama']
-                            end = df.loc[i, 'tani2']
-                            ax[r, c].axvspan(start, end, fill=True,
-                                             linewidth=0, color=color,
-                                             alpha=alpha)
+
+                        if start < 1951:
+                            print('\n景気基準日付は1951年6月から始まります。\n')
+                            
+                        yr_lst = df['yama'].astype(str).str[:4].astype(int)
+                        cond = ( yr_lst >= start ) & ( yr_lst <= end )
+                        df = df.loc[cond,:].reset_index(drop=True)
+                        
+                        for i in df.index:
+                            yama = df.loc[i, 'yama']
+                            tani = df.loc[i, 'tani2']
+                            ax[r,c].axvspan(yama, tani, fill=True, linewidth=0,
+                                       color=color, alpha=alpha)
                 return ax
 
         return wrapper
