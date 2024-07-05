@@ -264,11 +264,12 @@ def fukyo(ax, color='k', alpha=0.1):
     ax[0].plot(...)
     ax[1].plot(...)
     fukyo(ax[0], color='grey', alpha=0.2)
-    """
+
+    ＜景気基準日付＞ https://www.esri.cao.go.jp/jp/stat/di/hiduke.html"""
 
     df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"),
                      index_col='index',
-                     parse_dates=True,
+                     parse_dates=['tani1','yama','tani2'],
                      compression="bz2",
                      dtype={'expansion': 'Int64', 'contraction': 'Int64'})
 
