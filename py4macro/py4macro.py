@@ -176,6 +176,22 @@ mad_definitions = """
     | the evolution of the world economy: A new 2023 update." Journal of Economic
     | Surveys, pp.1-41."""
 
+debts_definitions = """
+    | `revenue`: Government revenue, percent of GDP
+    | `expenditure`: Government expenditure, percent of GDP
+    | `interest_exp`: Government interest expense, percent of GDP
+    | `prim_expenditure`: Government primary expenditure, percent of GDP
+    | `prim_balance`: Government primary balance, percent of GDP
+    | `debt`: Government gross debt, percent of GDP
+    | `rltir`: Real long-term interest rate, percent
+    | `rgc`: Real GDP growth rate, percent
+    | `GG_budg`: sector coverage indicator for rev, exp, ie (0 for central gov't, 1 for general gov't)
+    | `GG_debt`: sector coverage indicator for debt (0 for central gov't, 1 for general gov't)
+    |
+    | ＜出典＞
+    | Public Finances in Modern History
+    | https://www.imf.org/external/datamapper/datasets/FPP"""
+
 # ===== Helper functions ======================================================
 
 
@@ -522,16 +538,17 @@ def data(dataset=None, description=0):
     """|
        | 引数：
        |     dataset: (文字列)
-       |         'pwt': Penn World Table 10.01
-       |         'weo': IMF World Economic Outlook 2024
+       |         'bigmac': Big Macインデックス
+       |         'debts'：Historical Debts Data (Public Finances in Modern History)
+       |         'dates': 景気循環日付と拡張・後退期間
+       |         'ex': 円/ドル為替レートなど
+       |         'jpn-money': 日本の四半期データ（マネーストックなど）
+       |         'jpn-q': 日本の四半期データ（GDPなど）
        |         'mad': country data of Maddison Project Database 2020
        |         'mad-region': regional data of Maddison Project Database 2020
-       |         'jpn-q': 日本の四半期データ（GDPなど）
-       |         'jpn-money': 日本の四半期データ（マネーストックなど）
+       |         'pwt': Penn World Table 10.01
+       |         'weo': IMF World Economic Outlook 2024
        |         'world-money': 177ヵ国のマネーストックなど
-       |         'ex': 円/ドル為替レートなど
-       |         'dates': 景気循環日付と拡張・後退期間
-       |         'bigmac': Big Macインデックス
        |
        |     description (デフォルト：0, 整数型):
        |         0: データのDataFrameを返す
@@ -584,21 +601,23 @@ def data(dataset=None, description=0):
        |         South America"""
 
     if dataset not in ['pwt', 'weo', 'mad', 'mad-region', 'jpn-q',
-                       'jpn-money', 'world-money', 'ex', 'dates', 'bigmac']:
+                       'jpn-money', 'world-money', 'ex', 'dates', 'bigmac', 'debts']:
         try:
             raise ValueError("""次の内１つを選んでください。
-    'pwt': Penn World Table 10.01
-    'weo': IMF World Economic Outlook 2024
+    'bigmac': Big Macインデックス
+    'debts'：Historical Debts Data (Public Finances in Modern History)
+    'dates': 景気循環日付など
+    'ex': 円/ドル為替レートなど
+    'jpn-money': 日本の四半期データ（マネーストックなど）
+    'jpn-q': 日本の四半期データ（GDPなど）
     'mad': country data of Maddison Project Database 2023
     'mad-region': regional data of Maddison Project Database 2023
-    'jpn-q': 日本の四半期データ（GDPなど）
-    'jpn-money': 日本の四半期データ（マネーストックなど）
-    'world-money': 177ヵ国のマネーストックなど
-    'ex': 円/ドル為替レートなど
-    'dates': 景気循環日付など
-    'bigmac': Big Macインデックス""")
+    'pwt': Penn World Table 10.01
+    'weo': IMF World Economic Outlook 2024
+    'world-money': 177ヵ国のマネーストックなど""")
         except ValueError as e:
             print(e)
+
 
     # Penn World Table --------------------------------------------------------
     elif (dataset == 'pwt') & (description == 0):
@@ -815,6 +834,22 @@ def data(dataset=None, description=0):
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame
     1: 変数の定義を表示""")
+        except ValueError as e:
+            print(e)
+
+    # Historical Delts --------------------------------------------------------
+    elif (dataset == 'debts') & (description == 0):
+        return pd.read_csv(join(_get_path(__file__),
+                                "data/debts.csv.bz2"), compression="bz2")
+
+    elif (dataset == 'debts') & (description == 1):
+        print(debts_definitions)
+
+    elif (dataset == 'debts') & (description not in [0, 1]):
+        try:
+            raise ValueError("""descriptionに次の内１つを選んでください。
+    0: データのDataFrame (デフォルト)
+    1: 変数の定義を全て表示""")
         except ValueError as e:
             print(e)
 

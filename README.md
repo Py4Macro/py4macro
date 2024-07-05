@@ -24,6 +24,7 @@
     * 円/ドル為替レートなど
     * 景気循環日付と拡張・後退期間
     * Big Macインデックス
+    * Historical Debts Data (Public Finances in Modern History)
 
 # 使い方
 ```

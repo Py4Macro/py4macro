@@ -28,4 +28,5 @@ __doc__ = """
             * 177ヵ国のマネーストックなど
             * 円/ドル為替レート
             * 景気循環日付と拡張・後退期間
-            * Big Mac インデックス"""
+            * Big Mac インデックス
+            * Historical Debts Data (Public Finances in Modern History)"""
