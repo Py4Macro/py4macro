@@ -7,6 +7,7 @@ v0.8.9, 2024-07-5
 * `weo`の引数`description=-1`と`description=-2`は廃止
 * `jpn-q`を2023年Q4のデータまでに更新
 * 四半期データの`DatetimeIndex`は四半期の最初の日に変更
+* `fukyo()`関数とデコレーターに引数`start`と`end`を追加
 
 v0.8.8, 2024-01-08
 * `see`関数を追加
