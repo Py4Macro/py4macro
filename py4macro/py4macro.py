@@ -352,6 +352,8 @@ def recessions(start=1980, end=2999, color='k', alpha=0.1):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
 
+            nonlocal df, start, end, color, alpha
+
             if start < 1951:
                 print('\n景気基準日付は1951年6月から始まります。\n')
 
@@ -367,7 +369,7 @@ def recessions(start=1980, end=2999, color='k', alpha=0.1):
                 for i in df.index:
                     yama = df.loc[i, 'yama']
                     tani = df.loc[i, 'tani2']
-                    ax.axvspan(yama, tani, fill=True, linewidth=0,
+                    plt.axvspan(yama, tani, fill=True, linewidth=0,
                                color=color, alpha=alpha)
 
                 return ax
@@ -779,7 +781,7 @@ def data(dataset=None, description=0):
     elif (dataset == 'dates') & (description == 0):
         df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"),
                          index_col='index',
-                         parse_dates=True,
+                         parse_dates=['tani1','yama','tani2'],
                          compression="bz2",
                          dtype={'expansion': 'Int64', 'contraction': 'Int64'})
         df.index.name = ''
