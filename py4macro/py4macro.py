@@ -1,6 +1,7 @@
 import functools
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 import pandas as pd
 from math import ceil
 from os.path import abspath, join, split
@@ -9,21 +10,21 @@ from os.path import abspath, join, split
 # ===== Definitions ===========================================================
 
 jpn_q_definitions = """
-    | `gdp`: 国内総生産（GDP）
+    | `gdp`:         国内総生産（GDP）
     | `consumption`: 消費
-    | `investment`: 投資
-    | `government`: 政府支出
-    | `exports`: 輸出
-    | `imports`: 輸入
-    | `capital`: 資本ストック
-    | `employed`: 就業者数
-    | `unemployed`: 失業者数
+    | `investment`:  投資
+    | `government`:  政府支出
+    | `exports`:     輸出
+    | `imports`:     輸入
+    | `capital`:     資本ストック
+    | `employed`:    就業者数
+    | `unemployed`:  失業者数
     | `unemployment_rate`: 失業率
-    | `hours`: 労働者一人当たり月平均労働時間
+    | `hours`:       労働者一人当たり月平均労働時間
     | `total_hours`: 月平均総労働時間（`employed`X`hours`）
-    | `inflation`: インフレ率
-    | `price`: 消費者物価指数
-    | `deflator`: GDPデフレーター
+    | `inflation`:   インフレ率
+    | `price`:       消費者物価指数
+    | `deflator`:    GDPデフレーター
     |
     | * 四半期データ
     |
@@ -85,22 +86,21 @@ jpn_money_definitions = """
     |
     | * 月次データ
     | * 1955年1月〜2020年12月
-    | * 行ラベル：毎月の最終日
     |
     | ＜出典＞
     | OECD Main Economic Indicators"""
 
 world_money_definitions = """
-    | `iso`: ISO国コード
-    | `country`: 国名
-    | `year`: 年
+    | `iso`:          ISO国コード
+    | `country`:      国名
+    | `year`:         年
     | `income_group`: 世界銀行が定義する所得グループ
     |   * High income
     |   * Upper Middle income
     |   * Lower Middle income
     |   * Low income
-    | `money`: マネーストック（M1）
-    | `deflator`: GDPディフレーター
+    | `money`:        マネーストック（M1）
+    | `deflator`:     GDPディフレーター
     |
     | * 年次データ
     |
@@ -134,26 +134,26 @@ ex_definitions = """
     | OECD Main Economic Indicators"""
 
 dates_definitions = """
-    | `tani1`: １つの循環における第１の谷
-    | `yama`:  １つの循環における山
-    | `tani2`: １つの循環における第２の谷
-    | `expansion`: 拡張期の期間（単位：月）
-    |              `tani1`から`yama`までの期間
+    | `tani1`:       １つの循環における第１の谷
+    | `yama`:        １つの循環における山
+    | `tani2`:       １つの循環における第２の谷
+    | `expansion`:   拡張期の期間（単位：月）
+    |                `tani1`から`yama`までの期間
     | `contraction`: 後退期の期間（単位：月）
     |                `yama`から`tani2`までの期間
     |
     | ＜出典＞
-    |   * 内閣府
-    |   * https://www.esri.cao.go.jp/jp/stat/di/hiduke.html"""
+    | 内閣府
+    | https://www.esri.cao.go.jp/jp/stat/di/hiduke.html"""
 
 bigmac_definitions = """
-    | `year`:       年（2000年〜）
-    | `country`:    国名
-    | `iso`:        ISO国コード
+    | `year`:          年（2000年〜）
+    | `country`:       国名
+    | `iso`:           ISO国コード
     | `currency_code`: 通貨コード
-    | `price_local`: Big Macの価格（自国通貨単位）
-    | `exr`:        名目為替レート（自国通貨単位/米ドル）
-    | `gdppc_local`: 名目一人当たりGDP（自国通貨単位）
+    | `price_local`:   Big Macの価格（自国通貨単位）
+    | `exr`:           名目為替レート（自国通貨単位/米ドル）
+    | `gdppc_local`:   名目一人当たりGDP（自国通貨単位）
     |
     | * 年次データ
     |
@@ -177,19 +177,19 @@ mad_definitions = """
     | Surveys, pp.1-41."""
 
 debts_definitions = """
-    | `countrycode`:    ISO3国名コード
-    | `country`:        国名
-    | `year`:           年
-    | `revenue`:        Government revenue, percent of GDP
-    | `expenditure`:    Government expenditure, percent of GDP
-    | `interest_exp`:   Government interest expense, percent of GDP
+    | `countrycode`:      ISO3国名コード
+    | `country`:          国名
+    | `year`:             年
+    | `revenue`:          Government revenue, percent of GDP
+    | `expenditure`:      Government expenditure, percent of GDP
+    | `interest_exp`:     Government interest expense, percent of GDP
     | `prim_expenditure`: Government primary expenditure, percent of GDP
-    | `prim_balance`:   Government primary balance, percent of GDP
-    | `debt`:           Government gross debt, percent of GDP
-    | `rltir`:          Real long-term interest rate, percent
-    | `rgc`:            Real GDP growth rate, percent
-    | `GG_budg`: sector coverage indicator for rev, exp, ie (0 for central gov't, 1 for general gov't)
-    | `GG_debt`: sector coverage indicator for debt (0 for central gov't, 1 for general gov't)
+    | `prim_balance`:     Government primary balance, percent of GDP
+    | `debt`:             Government gross debt, percent of GDP
+    | `rltir`:            Real long-term interest rate, percent
+    | `rgc`:              Real GDP growth rate, percent
+    | `GG_budg`:          sector coverage indicator for rev, exp, ie (0 for central gov't, 1 for general gov't)
+    | `GG_debt`:          sector coverage indicator for debt (0 for central gov't, 1 for general gov't)
     |
     | ＜出典＞
     | Public Finances in Modern History
@@ -200,6 +200,20 @@ debts_definitions = """
 
 def _get_path(f):
     return split(abspath(f))[0]
+
+
+def _find_full_file_path(path, dataset_to_open):
+    """
+    parameters:
+        path: the folder of`py4macro.py`
+        dataset_to_open: dataset to open
+
+    return:
+        a full file path of `dataset_to_open` including its file name"""
+
+    for current_folder, sub_folders, _files in os.walk(path):
+        if dataset_to_open in _files:
+            return os.path.join(current_folder, dataset_to_open)
 
 
 # ===== Non-data-related functions ============================================
@@ -288,7 +302,8 @@ def fukyo(ax, start=1980, end=2999, color='k', alpha=0.1):
 
     ＜景気基準日付＞ https://www.esri.cao.go.jp/jp/stat/di/hiduke.html"""
 
-    df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"),
+    full_file_path = _find_full_file_path(_get_path(__file__), 'cycle_dates.csv.bz2')
+    df = pd.read_csv(full_file_path,
                      index_col='index',
                      parse_dates=['tani1','yama','tani2'],
                      compression="bz2",
@@ -360,7 +375,8 @@ def recessions(start=1980, end=2999, color='k', alpha=0.1):
         ax[1].plot(...)
         return ax       # この行は必須"""
 
-    df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"),
+    full_file_path = _find_full_file_path(_get_path(__file__), 'cycle_dates.csv.bz2')
+    df = pd.read_csv(full_file_path,
                      index_col='index',
                      parse_dates=['tani1','yama','tani2'],
                      compression="bz2",
@@ -542,7 +558,7 @@ def data(dataset=None, description=0):
        | 引数：
        |     dataset: (文字列)
        |         'bigmac': Big Macインデックス
-       |         'debts'：Historical Debts Data (Public Finances in Modern History)
+       |         'debts'：政府負債に関する長期時系列データ
        |         'dates': 景気循環日付と拡張・後退期間
        |         'ex': 円/ドル為替レートなど
        |         'jpn-money': 日本の四半期データ（マネーストックなど）
@@ -622,14 +638,16 @@ def data(dataset=None, description=0):
             print(e)
 
 
+
     # Penn World Table --------------------------------------------------------
-    elif (dataset == 'pwt') & (description == 0):
-        return pd.read_csv(join(_get_path(__file__),
-                                "data/pwt_data.csv.bz2"), compression="bz2")
+    if (dataset == 'pwt') & (description == 0):
+        full_file_path = _find_full_file_path(_get_path(__file__), 'pwt_data.csv.bz2')
+        return pd.read_csv(full_file_path, compression="bz2")
 
     elif (dataset == 'pwt') & (description == 1):
-        df = pd.read_csv(join(_get_path(__file__), "data/pwt_definitions.csv")
-                         ).iloc[:, [0, 1]].dropna(subset=['Variable name']
+        full_file_path = _find_full_file_path(_get_path(__file__), 'pwt_definitions.csv')
+        df = pd.read_csv(full_file_path
+                        ).iloc[:, [0, 1]].dropna(subset=['Variable name']
                                                   ).set_index('Variable name')
         df.index.name = ''
 
@@ -638,8 +656,9 @@ def data(dataset=None, description=0):
             display(df)
 
     elif (dataset == 'pwt') & (description == 2):
-        df = pd.read_csv(join(_get_path(__file__), "data/pwt_definitions.csv")
-                         ).iloc[:, [0, 1]].dropna(subset=['Variable name']
+        full_file_path = _find_full_file_path(_get_path(__file__), 'pwt_definitions.csv')
+        df = pd.read_csv(full_file_path
+                        ).iloc[:, [0, 1]].dropna(subset=['Variable name']
                                                   ).set_index('Variable name')
         df.index.name = ''
 
@@ -656,14 +675,12 @@ def data(dataset=None, description=0):
 
     # IMF World Economic Outlook ----------------------------------------------
     elif (dataset == 'weo') & (description == 0):
-        df = pd.read_csv(join(_get_path(__file__),
-                            "data/weo.csv.bz2"),
-                        compression="bz2")
-        return df
+        full_file_path = _find_full_file_path(_get_path(__file__), 'weo.csv.bz2')
+        return pd.read_csv(full_file_path, compression="bz2")
 
     elif (dataset == 'weo') & (description == 1):
-        df = pd.read_csv(join(_get_path(__file__),
-                            "data/weo_description.csv.bz2"),
+        full_file_path = _find_full_file_path(_get_path(__file__), 'weo_description.csv.bz2')
+        df = pd.read_csv(full_file_path,
                          compression="bz2").set_index("WEO Subject Code").sort_index()
 
         with pd.option_context('display.max_colwidth', None,
@@ -671,8 +688,8 @@ def data(dataset=None, description=0):
             display(df)
     
     elif (dataset == 'weo') & (description == 2):
-        df = pd.read_csv(join(_get_path(__file__),
-                            "data/weo_description.csv.bz2"),
+        full_file_path = _find_full_file_path(_get_path(__file__), '.weo_description.csv.bz2')
+        df = pd.read_csv(full_file_path,
                          compression="bz2").set_index("WEO Subject Code").sort_index()
         return df
 
@@ -687,8 +704,8 @@ def data(dataset=None, description=0):
 
     # Maddison Project (Countries) --------------------------------------------
     elif (dataset == 'mad') & (description == 0):
-        return pd.read_csv(join(_get_path(__file__),
-                                "data/mad_country.csv.bz2"),
+        full_file_path = _find_full_file_path(_get_path(__file__), 'mad_country.csv.bz2')
+        return pd.read_csv(full_file_path,
                            compression="bz2", thousands=','
                            ).sort_values(['countrycode', 'year'])
 
@@ -703,10 +720,10 @@ def data(dataset=None, description=0):
         except ValueError as e:
             print(e)
 
-    # Maddison Project (regionsional data ----------------------------------------------
+    # Maddison Project (regionsional data) ----------------------------------------------
     elif (dataset == 'mad-region') & (description == 0):
-        return pd.read_csv(join(_get_path(__file__),
-                                "data/mad_region.csv.bz2"),
+        full_file_path = _find_full_file_path(_get_path(__file__), 'mad_region.csv.bz2')
+        return pd.read_csv(full_file_path,
                            compression="bz2", thousands=','
                            ).sort_values(['region', 'year'])
 
@@ -723,8 +740,8 @@ def data(dataset=None, description=0):
 
     # 日本の四半期データ（GDPなど）-------------------------------------------------------
     elif (dataset == 'jpn-q') & (description == 0):
-        df = pd.read_csv(join(_get_path(__file__),
-                              "data/jpn_quarterly.csv.bz2"),
+        full_file_path = _find_full_file_path(_get_path(__file__), 'jpn_quarterly.csv.bz2')
+        df = pd.read_csv(full_file_path,
                          index_col='index',
                          parse_dates=True,
                          compression="bz2")
@@ -744,8 +761,8 @@ def data(dataset=None, description=0):
 
     # 日本の四半期データ（マネーストックなど）-----------------------------------------
     elif (dataset == 'jpn-money') & (description == 0):
-        df = pd.read_csv(join(_get_path(__file__),
-                              "data/jpn_money.csv.bz2"),
+        full_file_path = _find_full_file_path(_get_path(__file__), 'jpn_money.csv.bz2')
+        df = pd.read_csv(full_file_path,
                          index_col='date', parse_dates=True, compression="bz2")
         df.index.name = ''
         return df
@@ -763,7 +780,8 @@ def data(dataset=None, description=0):
 
     # 177ヵ国のマネーストックなど -----------------------------------------------------
     elif (dataset == 'world-money') & (description == 0):
-        df = pd.read_csv(join(_get_path(__file__), "data/world_money.csv.bz2"),
+        full_file_path = _find_full_file_path(_get_path(__file__), 'world_money.csv.bz2')
+        df = pd.read_csv(full_file_path,
                          compression="bz2")
         return df
 
@@ -780,8 +798,8 @@ def data(dataset=None, description=0):
 
     # 円/ドル為替レートなど -----------------------------------------------------
     elif (dataset == 'ex') & (description == 0):
-        df = pd.read_csv(join(_get_path(__file__),
-                              "data/real_ex_rate.csv.bz2"),
+        full_file_path = _find_full_file_path(_get_path(__file__), 'real_ex_rate.csv.bz2')
+        df = pd.read_csv(full_file_path,
                          index_col='index',
                          parse_dates=True,
                          compression="bz2")
@@ -801,7 +819,8 @@ def data(dataset=None, description=0):
 
     # 景気循環日付など -----------------------------------------------------
     elif (dataset == 'dates') & (description == 0):
-        df = pd.read_csv(join(_get_path(__file__), "data/cycle_dates.csv.bz2"),
+        full_file_path = _find_full_file_path(_get_path(__file__), 'cycle_dates.csv.bz2')
+        df = pd.read_csv(full_file_path,
                          index_col='index',
                          parse_dates=['tani1','yama','tani2'],
                          compression="bz2",
@@ -822,7 +841,8 @@ def data(dataset=None, description=0):
 
     # Big Mac Index -----------------------------------------------------
     elif (dataset == 'bigmac') & (description == 0):
-        df = pd.read_csv(join(_get_path(__file__), "data/bigmac.csv.bz2"),
+        full_file_path = _find_full_file_path(_get_path(__file__), 'bigmac.csv.bz2')
+        df = pd.read_csv(full_file_path,
                          index_col='index',
                          compression="bz2",
                          dtype={'expansion': 'Int64', 'contraction': 'Int64'})
@@ -842,8 +862,8 @@ def data(dataset=None, description=0):
 
     # Historical Delts --------------------------------------------------------
     elif (dataset == 'debts') & (description == 0):
-        return pd.read_csv(join(_get_path(__file__),
-                                "data/debts.csv.bz2"), compression="bz2")
+        full_file_path = _find_full_file_path(_get_path(__file__), 'debts.csv.bz2')
+        return pd.read_csv(full_file_path, compression="bz2")
 
     elif (dataset == 'debts') & (description == 1):
         print(debts_definitions)

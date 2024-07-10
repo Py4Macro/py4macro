@@ -7,7 +7,7 @@ from .py4macro import *
 __all__ = ['data','trend','show','xvalues','recessions','fukyo', 'see']
 
 __author__ = 'Tetsu Haruyama'
-__version__ = '0.8.10'
+__version__ = '0.8.11a'
 __copyright__ = 'Copyright (c) 2024 Tetsu Haruyama'
 
 __doc__ = """
@@ -29,4 +29,4 @@ __doc__ = """
             * 円/ドル為替レート
             * 景気循環日付と拡張・後退期間
             * Big Mac インデックス
-            * Historical Debts Data (Public Finances in Modern History)"""
+            * 政府負債に関する長期時系列データ

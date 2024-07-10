@@ -24,7 +24,7 @@
     * 円/ドル為替レートなど
     * 景気循環日付と拡張・後退期間
     * Big Macインデックス
-    * Historical Debts Data (Public Finances in Modern History)
+    * 政府負債に関する長期時系列データ
 
 # 使い方
 ```
@@ -215,15 +215,16 @@ py4macro.data(dataset=None, description=0)
 **引数**：
 
 * `dataset`: (文字列)
-    * `'pwt'`:   Penn World Table 10.0
-    * `'weo'`:   IMF World Economic Outlook 2024
-    * `'mad'`:   country data of Maddison Project Database 2020
-    * `'mad-region'`:   regional data of Maddison Project Database 2020
-    * `'jpn-q'`: 日本の四半期データ（GDPなど）
-    * `'jpn-money'`: 日本の月次データ（CPIとマネーストック）
-    * `'world-money'`: 177ヵ国のマネーストックなど
-    * `'ex'`: 円/ドル為替レートなど
     * `'bigmac'`: Big Macインデックス
+    * `'debts'`: 政府負債に関する長期時系列データ
+    * `'ex'`: 円/ドル為替レートなど
+    * `'jpn-money'`: 日本の月次データ（CPIとマネーストック）
+    * `'jpn-q'`: 日本の四半期データ（GDPなど）
+    * `'mad'`:   country data of Maddison Project Database 2023
+    * `'mad-region'`:   regional data of Maddison Project Database 2023
+    * `'pwt'`:   Penn World Table 10.01
+    * `'weo'`:   IMF World Economic Outlook 2024
+    * `'world-money'`: 177ヵ国のマネーストックなど
 
 
 * `description` (デフォルト：`0`, 整数型):
