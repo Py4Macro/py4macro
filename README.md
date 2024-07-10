@@ -152,7 +152,7 @@ fukyo(ax[0], start=1970, end=2005, color='grey', alpha=0.2)
 * `@py4macro.recessions()`は全ての軸に後退期間の塗りつぶしを追加する
 
 ```
-@py4macro.recessions(start=1980, end=2999, color='k', alpha=0.1)
+@py4macro.recessions(start=1980, end=2900, color='k', alpha=0.1)
 ＜関数＞
 ```
 
