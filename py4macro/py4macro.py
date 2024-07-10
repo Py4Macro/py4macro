@@ -688,7 +688,7 @@ def data(dataset=None, description=0):
             display(df)
     
     elif (dataset == 'weo') & (description == 2):
-        full_file_path = _find_full_file_path(_get_path(__file__), '.weo_description.csv.bz2')
+        full_file_path = _find_full_file_path(_get_path(__file__), 'weo_description.csv.bz2')
         df = pd.read_csv(full_file_path,
                          compression="bz2").set_index("WEO Subject Code").sort_index()
         return df
