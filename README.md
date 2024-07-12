@@ -19,6 +19,7 @@
     * IMF World Economic Outlook 2024
     * Maddison Project Database 2023
     * 日本の四半期データ（GDPなど）
+    * 日本の年次データ（GDPなど）
     * 日本の四半期データ（マネーストックなど）
     * 177ヵ国のマネーストックなど
     * 円/ドル為替レートなど

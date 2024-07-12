@@ -7,7 +7,7 @@ from .py4macro import *
 __all__ = ['data','trend','show','xvalues','recessions','fukyo', 'see']
 
 __author__ = 'Tetsu Haruyama'
-__version__ = '0.8.11'
+__version__ = '0.8.12'
 __copyright__ = 'Copyright (c) 2024 Tetsu Haruyama'
 
 __doc__ = """
@@ -24,6 +24,7 @@ __doc__ = """
             * IMF World Economic Outlook 2024
             * Maddison Project Database 2023
             * 日本の四半期データ（GDPなど）
+            * 日本の年次データ（GDPなど）
             * 日本の月次データ（マネーストックなど）
             * 177ヵ国のマネーストックなど
             * 円/ドル為替レート

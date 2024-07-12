@@ -9,6 +9,65 @@ from os.path import abspath, join, split
 
 # ===== Definitions ===========================================================
 
+jpn_yr_definitions = """
+    | `gdp`:          国内総生産（GDP）
+    | `consumption`:  消費
+    | `investment`:   投資
+    | `government`:   政府支出
+    | `exports`:      輸出
+    | `imports`:      輸入
+    | `gdp_gap`:      GDPギャップ
+    | `deflator`:     GDPデフレーター
+    | `inflation`:    インフレ率
+    | `unemployment_rate`: 失業率
+    | `employed`:     就業者数
+    | `population`:   人口
+    | `gov_debt`:     政府負債
+    | `gov_net_debt`: 政府純負債
+    |
+    | * 年次データ（暦年）
+    |
+    | ＜出典＞
+    | GDPと各需要項目
+    |    * 1994年~
+    |        * 実額
+    |        * 2015暦年（平成27年）連鎖価格
+    |        * 単位：10億円
+    |        * 国民経済計算（GDP統計）
+    |    * 1980年~1993年
+    |        * 実額
+    |        * 平成27年基準支出側GDP系列簡易遡及（参考系列であり上のデータと接続可能）
+    |        * 単位：10億円
+    |        * 国民経済計算（GDP統計）
+    |
+    | GDPギャップ
+    |   * 単位：％
+    |   * GDPの潜在GDPからの乖離
+    |   * IMF World Economic Outlook
+    |
+    | GDPデフレーター
+    |   * IMF World Economic Outlook
+    |
+    | インフレ率
+    |   * 単位：％
+    |
+    | 失業率
+    |   * 単位：％
+    |   * IMF World Economic Outlook
+    |
+    | 就業者数，人口
+    |   * 単位：万人
+    |   * IMF World Economic Outlook
+    |
+    | 政府負債
+    |   * 単位：10億円
+    |   * IMF World Economic Outlook
+    |
+    | 政府純負債
+    |   * 単位：10億円
+    |   * IMF World Economic Outlook"""
+
+
 jpn_q_definitions = """
     | `gdp`:         国内総生産（GDP）
     | `consumption`: 消費
@@ -29,7 +88,7 @@ jpn_q_definitions = """
     | * 四半期データ
     |
     | ＜出典＞
-    | GDPとその構成要素
+    | GDPと各需要項目
     |    * 1994年Q1~2023年Q4
     |        * 実額・四半期・実質季節調整系列（年換算）
     |        * 2015暦年（平成27年）連鎖価格
@@ -563,6 +622,7 @@ def data(dataset=None, description=0):
        |         'ex': 円/ドル為替レートなど
        |         'jpn-money': 日本の四半期データ（マネーストックなど）
        |         'jpn-q': 日本の四半期データ（GDPなど）
+       |         'jpn-yr': 日本の年次データ（GDPなど）
        |         'mad': country data of Maddison Project Database 2020
        |         'mad-region': regional data of Maddison Project Database 2020
        |         'pwt': Penn World Table 10.01
@@ -619,7 +679,7 @@ def data(dataset=None, description=0):
        |         North America
        |         South America"""
 
-    if dataset not in ['pwt', 'weo', 'mad', 'mad-region', 'jpn-q',
+    if dataset not in ['pwt', 'weo', 'mad', 'mad-region', 'jpn-q', 'jpn-yr',
                        'jpn-money', 'world-money', 'ex', 'dates', 'bigmac', 'debts']:
         try:
             raise ValueError("""次の内１つを選んでください。
@@ -629,6 +689,7 @@ def data(dataset=None, description=0):
     'ex': 円/ドル為替レートなど
     'jpn-money': 日本の四半期データ（マネーストックなど）
     'jpn-q': 日本の四半期データ（GDPなど）
+    'jpn-yr': 日本の年次データ（GDPなど）
     'mad': country data of Maddison Project Database 2023
     'mad-region': regional data of Maddison Project Database 2023
     'pwt': Penn World Table 10.01
@@ -752,6 +813,27 @@ def data(dataset=None, description=0):
         print(jpn_q_definitions)
 
     elif (dataset == 'jpn-q') & (description not in [0, 1]):
+        try:
+            raise ValueError("""descriptionに次の内１つを選んでください。
+    0: データのDataFrame
+    1: 変数の定義を表示""")
+        except ValueError as e:
+            print(e)
+
+    # 日本の年次データ（GDPなど）-------------------------------------------------------
+    elif (dataset == 'jpn-yr') & (description == 0):
+        full_file_path = _find_full_file_path(_get_path(__file__), 'jpn_annual.csv.bz2')
+        df = pd.read_csv(full_file_path,
+                         index_col='index',
+                         parse_dates=True,
+                         compression="bz2")
+        df.index.name = ''
+        return df
+
+    elif (dataset == 'jpn-yr') & (description == 1):
+        print(jpn_q_definitions)
+
+    elif (dataset == 'jpn-yr') & (description not in [0, 1]):
         try:
             raise ValueError("""descriptionに次の内１つを選んでください。
     0: データのDataFrame
