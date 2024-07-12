@@ -36,7 +36,7 @@ jpn_yr_definitions = """
     |        * 国民経済計算（GDP統計）
     |    * 1980年~1993年
     |        * 実額
-    |        * 平成27年基準支出側GDP系列簡易遡及（参考系列であり上のデータと接続可能）
+    |        * 2015年（平成27年）基準支出側GDP系列簡易遡及（参考系列であり上のデータと接続可能）
     |        * 単位：10億円
     |        * 国民経済計算（GDP統計）
     |
@@ -50,6 +50,8 @@ jpn_yr_definitions = """
     |
     | インフレ率
     |   * 単位：％
+    |   * 年平均
+    |   * IMF World Economic Outlook
     |
     | 失業率
     |   * 単位：％
@@ -831,7 +833,7 @@ def data(dataset=None, description=0):
         return df
 
     elif (dataset == 'jpn-yr') & (description == 1):
-        print(jpn_q_definitions)
+        print(jpn_yr_definitions)
 
     elif (dataset == 'jpn-yr') & (description not in [0, 1]):
         try:
