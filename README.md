@@ -15,16 +15,16 @@
 * 後退期間にグレーの塗りつぶしを追加する`fukyo()`関数
 * 後退期間にグレーの塗りつぶしを追加する`recessions()`デコレーター
 * データ・セット
-    * Penn World Tables 10.01
+    * Big Macインデックス
     * IMF World Economic Outlook 2024
     * Maddison Project Database 2023
+    * Penn World Tables 10.01
     * 日本の四半期データ（GDPなど）
     * 日本の年次データ（GDPなど）
     * 日本の四半期データ（マネーストックなど）
     * 177ヵ国のマネーストックなど
     * 円/ドル為替レートなど
     * 景気循環日付と拡張・後退期間
-    * Big Macインデックス
     * 政府負債に関する長期時系列データ
 
 # 使い方
