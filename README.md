@@ -81,7 +81,7 @@ py4macro.xvalues(low, high, number)
 `py4macro.xvalues(-1, 1, 5)`
 
 ```
->>> [-1.0, -0.5, 0.0, 0.5, 1.0]
+ [-1.0, -0.5, 0.0, 0.5, 1.0]
 ```
 
 ## オブジェクトの属性（`_`もしくは`__`が付いた属性以外）を表示する
@@ -264,3 +264,8 @@ or
 ```
 pip install git+https://github.com/Py4Macro/py4macro.git
 ```
+
+# JupyterLiteで使用する際の注意点
+次の場合は`matplotlib`をインポートするが必要あります。
+* `pandas`のデータフレームやシリーズの`.plot()`メソッドを使う場合
+* `@py4macro.recessions()`を使う場合
