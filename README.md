@@ -66,15 +66,15 @@ py4macro.show(df)
 
 ## `n`個の数値から構成されるリストを作成する
 ```
-py4macro.xvalues(l, h, n)
+py4macro.xvalues(low, high, number)
 ```
 **引数**：
-* `l`：最小値
-* `h`：最大値
-* `n`：要素数
+* `low`：最小値
+* `high`：最大値
+* `number`：要素数
 
 **戻り値**：
-* `n`個の浮動小数点数のリスト
+* `number`個の浮動小数点数のリスト
 
 **例**:
 
@@ -100,13 +100,15 @@ py4macro.xvalues(l, h, n)
 
 例：整数型である100の属性を調べる。
 
-`py4macro.see(100)`
+`py4macro.see(10)`
 
 ```
->>> .as_integer_ratio   .bit_count       .bit_length      .conjugate
->>> .denominator        .from_bytes      .imag            .numerator
->>> .real               .to_bytes
+.as_integer_ratio()  .bit_count()     .bit_length()    .conjugate()
+.denominator         .from_bytes()    .imag            .is_integer()
+.numerator           .real            .to_bytes()
+
 ```
+メソッドには`()`が付いて表示される
 
 
 ## 横軸に`DatetimeIndex`を使うプロットに対して後退期間にグレーの塗りつぶしを追加する関数
