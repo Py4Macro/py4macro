@@ -10,7 +10,7 @@ from os.path import abspath, join, split
 # ===== Definitions ===========================================================
 
 jpn_yr_definitions = """
-    | `gdp`:          国内総生産（GDP）
+    | `gdp`:          国内総生産（支出側GDP）
     | `consumption`:  消費
     | `investment`:   投資
     | `government`:   政府支出
@@ -58,7 +58,11 @@ jpn_yr_definitions = """
     |   * 単位：％
     |   * IMF World Economic Outlook
     |
-    | 就業者数，人口
+    | 就業者数
+    |   * 単位：万人
+    |   * IMF World Economic Outlook
+    |
+    | 人口
     |   * 単位：万人
     |   * IMF World Economic Outlook
     |
@@ -314,22 +318,22 @@ def show(df):
         display(df)
 
 
-def xvalues(l, h, n):
+def xvalues(low, high, number):
     """引数
-        l：最小値（lowest value）
-        h：最大値（highest value）
-        n：作成する数値の数を指定する（正の整数型，number of values）
+        low：最小値（lowest value）
+        high：最大値（highest value）
+        number：作成する数値の数を指定する（正の整数型，number of values）
     戻り値
         n個の要素から構成されるリスト"""
 
-    if (n <= 1) or (not isinstance(n, int)):
+    if (number <= 1) or (not isinstance(n, int)):
         raise Exception(f"引数 n には2以上の整数型を使う必要があります。n={n}となっています。")
-    elif l >= h:
+    elif low >= high:
         raise Exception(
-            "引数 l と h の値では l>h もしくは l=h となります。l<h となるように値を設定し直してください。"
+            "引数 low と high の値では low>high もしくは low=high となります。low<high となるように値を設定し直してください。"
         )
     else:
-        return [l + x*(h-l)/(n-1) for x in range(n)]
+        return [low + x*(high-low)/(number-1) for x in range(number)]
 
 
 def fukyo(ax, start=1980, end=2999, color='k', alpha=0.1):
@@ -566,6 +570,7 @@ def _create_template(obj, col, width):
 def see(obj, col=4, width=70):
     """
     オブジェクトの属性（`_`もしくは`__`が付いた属性以外）を表示する
+    メソッドは`()`が付いて表示される。
 
     引数：
         obj: 属性を調べるオブジェクト
@@ -581,37 +586,51 @@ def see(obj, col=4, width=70):
        see(100)
 
        ＜実行結果＞
-       .as_integer_ratio   .bit_count          .bit_length         .conjugate
-       .denominator        .from_bytes         .imag               .numerator
-       .real               .to_bytes
+
+       .as_integer_ratio()  .bit_count()     .bit_length()    .conjugate()
+       .denominator         .from_bytes()    .imag            .is_integer()
+       .numerator           .real            .to_bytes()
     """
 
     lst = [i for i in dir(obj) if i[0] != "_"]
+    
+    # Prepare display names with () for callables
+    display_lst = []
+    for attr in lst:
+        try:
+            attr_val = getattr(obj, attr)
+            if callable(attr_val):
+                display_lst.append(attr + "()")
+            else:
+                display_lst.append(attr)
+        except Exception:
+            display_lst.append(attr)
 
-    # create a list of lists
+    # Determine max length of attribute string (after dot)
+    max_attr_len = max(len(attr) for attr in display_lst)
+    
+    # Format attributes with alignment at the dot
+    formatted_attrs = [f".{attr:<{max_attr_len}}" for attr in display_lst]
+
+    # Break into rows
     new_lst = []
-    for i in range(ceil(len(lst)/col)):
-        new_lst.append(lst[i*col:i*col+col])
+    for i in range(ceil(len(formatted_attrs) / col)):
+        new_lst.append(formatted_attrs[i * col:i * col + col])
 
-    # create templates for inserting texts
-    template = _create_template(obj, col=col, width=width)
+    # Set uniform column width
+    col_width = max_attr_len + 1  # plus 1 for dot
 
-    # print each line of attributes
+    # Create templates
+    template = {i: [f"{{0:<{col_width}}}"] * i for i in range(1, col + 1)}
+
+    # Print formatted lines
     for inner_lst in new_lst:
-
         num = len(inner_lst)
-
-        # create a new inner list with inserted text
-        inner_lst_new = []
-        for idx, j in enumerate(template[num]):
-            inner_lst_new.append(j.format("."+inner_lst[idx]))
-
-        # create concatenated strings for a line to print
         line_str = ""
-        for e in inner_lst_new:
-            line_str += e+"  "
-
+        for idx, j in enumerate(template[num]):
+            line_str += j.format(inner_lst[idx]) + "  "
         print(line_str.strip())
+
 
 
 # ===== Data-related function =================================================
@@ -620,7 +639,7 @@ def see(obj, col=4, width=70):
 def data(dataset=None, description=0):
     """|
        | 引数：
-       |     dataset: (文字列)
+       |     datasets: (文字列)
        |         'bigmac': Big Macインデックス
        |         'debts'：政府負債に関する長期時系列データ
        |         'dates': 景気循環日付と拡張・後退期間
@@ -628,10 +647,10 @@ def data(dataset=None, description=0):
        |         'jpn-money': 日本の四半期データ（マネーストックなど）
        |         'jpn-q': 日本の四半期データ（GDPなど）
        |         'jpn-yr': 日本の年次データ（GDPなど）
-       |         'mad': country data of Maddison Project Database 2020
+       |         'mad': country data of Maddison Project Database 2023
        |         'mad-region': regional data of Maddison Project Database 2020
        |         'pwt': Penn World Table 10.01
-       |         'weo': IMF World Economic Outlook 2024
+       |         'weo': IMF World Economic Outlook 2025
        |         'world-money': 177ヵ国のマネーストックなど
        |
        |     description (デフォルト：0, 整数型):
@@ -641,6 +660,9 @@ def data(dataset=None, description=0):
        |            * 全てのデータセット
        |         2: 変数の定義のDataFrameを返す
        |            * `'pwt'`，`'weo'`のみ
+       |
+       |     datasets for 「経済学のためのPython入門」
+       |     　　'data1', 'data2', 'data3', 'data4', 'data5'
        |
        | 返り値：
        |     DataFrame もしくは DataFrameの表示
@@ -685,7 +707,8 @@ def data(dataset=None, description=0):
        |         South America"""
 
     if dataset not in ['pwt', 'weo', 'mad', 'mad-region', 'jpn-q', 'jpn-yr',
-                       'jpn-money', 'world-money', 'ex', 'dates', 'bigmac', 'debts']:
+                       'jpn-money', 'world-money', 'ex', 'dates', 'bigmac', 'debts',
+                       'data1', 'data2', 'data3', 'data4', 'data5']:
         try:
             raise ValueError("""次の内１つを選んでください。
     'bigmac': Big Macインデックス
@@ -698,8 +721,9 @@ def data(dataset=None, description=0):
     'mad': country data of Maddison Project Database 2023
     'mad-region': regional data of Maddison Project Database 2023
     'pwt': Penn World Table 10.01
-    'weo': IMF World Economic Outlook 2024
-    'world-money': 177ヵ国のマネーストックなど""")
+    'weo': IMF World Economic Outlook 2025
+    'world-money': 177ヵ国のマネーストックなど
+    'data1','data2','data3','data4','data5':「経済学のためのPython入門」""")
         except ValueError as e:
             print(e)
 
@@ -962,6 +986,27 @@ def data(dataset=None, description=0):
     1: 変数の定義を全て表示""")
         except ValueError as e:
             print(e)
+
+    # 「経済学のためのPython入門」 --------------------------------------------
+    elif (dataset == 'data1'):
+        full_file_path = _find_full_file_path(_get_path(__file__), 'data1.csv')
+        return pd.read_csv(full_file_path)
+
+    elif (dataset == 'data2'):
+        full_file_path = _find_full_file_path(_get_path(__file__), 'data2.csv')
+        return pd.read_csv(full_file_path)
+
+    elif (dataset == 'data3'):
+        full_file_path = _find_full_file_path(_get_path(__file__), 'data3.csv')
+        return pd.read_csv(full_file_path)
+
+    elif (dataset == 'data4'):
+        full_file_path = _find_full_file_path(_get_path(__file__), 'data4.csv')
+        return pd.read_csv(full_file_path)
+
+    elif (dataset == 'data5'):
+        full_file_path = _find_full_file_path(_get_path(__file__), 'data5.csv')
+        return pd.read_csv(full_file_path)
 
     # Otherwise ---------------------------------------------------------------
     else:

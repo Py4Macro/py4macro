@@ -14,9 +14,9 @@
 * オブジェクトの属性（`_`もしくは`__`が付いた属性以外）を表示する`see()`関数
 * 後退期間にグレーの塗りつぶしを追加する`fukyo()`関数
 * 後退期間にグレーの塗りつぶしを追加する`recessions()`デコレーター
-* データ・セット
+* データセット
     * Big Macインデックス
-    * IMF World Economic Outlook 2024
+    * IMF World Economic Outlook 2025
     * Maddison Project Database 2023
     * Penn World Tables 10.01
     * 日本の四半期データ（GDPなど）
@@ -26,6 +26,7 @@
     * 円/ドル為替レートなど
     * 景気循環日付と拡張・後退期間
     * 政府負債に関する長期時系列データ
+    * 「経済学のためのPython入門」用のデータ
 
 # 使い方
 ```

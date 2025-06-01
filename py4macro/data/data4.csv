@@ -1,0 +1,11 @@
+country,gdp,con,inv,pop,continent
+China,20118,7796.0,9137.0,1434,Asia
+France,2950,1598.0,806.0,67,Europe
+Germany,4274,2294.0,971.0,84,Europe
+India,9142,5936.0,2471.0,1366,Asia
+Italy,2463,1423.0,614.0,61,Europe
+Japan,5032,2675.0,1238.0,127,Asia
+Korea,2157,942.0,705.0,51,Asia
+Singapore,477,176.0,135.0,6,Asia
+Taiwan,1100,607.0,,24,Asia
+UK,2994,,,68,Europe
