@@ -1,6 +1,5 @@
 import functools
 import numpy as np
-import matplotlib.pyplot as plt
 import os
 import pandas as pd
 from math import ceil
@@ -454,6 +453,8 @@ def recessions(start=1980, end=2999, color='k', alpha=0.1):
 
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
+
+            import matplotlib.pyplot as plt
 
             nonlocal df, start, end, color, alpha
 
