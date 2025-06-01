@@ -326,7 +326,7 @@ def xvalues(low, high, number):
     戻り値
         n個の要素から構成されるリスト"""
 
-    if (number <= 1) or (not isinstance(n, int)):
+    if (number <= 1) or (not isinstance(number, int)):
         raise Exception(f"引数 n には2以上の整数型を使う必要があります。n={n}となっています。")
     elif low >= high:
         raise Exception(
@@ -1002,7 +1002,7 @@ def data(dataset=None, description=0):
 
     elif (dataset == 'data4'):
         full_file_path = _find_full_file_path(_get_path(__file__), 'data4.csv')
-        return pd.read_csv(full_file_path)
+        return pd.read_csv(full_file_path).set_index('country')
 
     elif (dataset == 'data5'):
         full_file_path = _find_full_file_path(_get_path(__file__), 'data5.csv')
