@@ -324,10 +324,10 @@ def xvalues(low, high, number):
         high：最大値（highest value）
         number：作成する数値の数を指定する（正の整数型，number of values）
     戻り値
-        n個の要素から構成されるリスト"""
+        number個の要素から構成されるリスト"""
 
     if (number <= 1) or (not isinstance(number, int)):
-        raise Exception(f"引数 n には2以上の整数型を使う必要があります。n={n}となっています。")
+        raise Exception(f"引数 number には2以上の整数型を使う必要があります。number={number}となっています。")
     elif low >= high:
         raise Exception(
             "引数 low と high の値では low>high もしくは low=high となります。low<high となるように値を設定し直してください。"
