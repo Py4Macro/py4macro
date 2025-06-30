@@ -653,6 +653,11 @@ def data(dataset=None, description=0):
        |         'pwt': Penn World Table 10.01
        |         'weo': IMF World Economic Outlook 2025
        |         'world-money': 177ヵ国のマネーストックなど
+       |         'data1': 書籍「経済学のためのPython入門」用
+       |         'data2': 書籍「経済学のためのPython入門」用
+       |         'data3': 書籍「経済学のためのPython入門」用
+       |         'data4': 書籍「経済学のためのPython入門」用
+       |         'data5': 書籍「経済学のためのPython入門」用
        |
        |     description (デフォルト：0, 整数型):
        |         0: データのDataFrameを返す
@@ -661,9 +666,6 @@ def data(dataset=None, description=0):
        |            * 全てのデータセット
        |         2: 変数の定義のDataFrameを返す
        |            * `'pwt'`，`'weo'`のみ
-       |
-       |     datasets for 「経済学のためのPython入門」
-       |     　　'data1', 'data2', 'data3', 'data4', 'data5'
        |
        | 返り値：
        |     DataFrame もしくは DataFrameの表示
@@ -724,7 +726,11 @@ def data(dataset=None, description=0):
     'pwt': Penn World Table 10.01
     'weo': IMF World Economic Outlook 2025
     'world-money': 177ヵ国のマネーストックなど
-    'data1','data2','data3','data4','data5':「経済学のためのPython入門」""")
+    'data1': 書籍「経済学のためのPython入門」用
+    'data2': 書籍「経済学のためのPython入門」用
+    'data3': 書籍「経済学のためのPython入門」用
+    'data4': 書籍「経済学のためのPython入門」用
+    'data5': 書籍「経済学のためのPython入門」用""")
         except ValueError as e:
             print(e)
 
@@ -988,7 +994,7 @@ def data(dataset=None, description=0):
         except ValueError as e:
             print(e)
 
-    # 「経済学のためのPython入門」 --------------------------------------------
+    # 書籍「経済学のためのPython入門」 --------------------------------------------
     elif (dataset == 'data1'):
         full_file_path = _find_full_file_path(_get_path(__file__), 'data1.csv')
         return pd.read_csv(full_file_path)
