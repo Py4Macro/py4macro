@@ -650,7 +650,7 @@ def data(dataset=None, description=0):
        |         'jpn-yr': 日本の年次データ（GDPなど）
        |         'mad': country data of Maddison Project Database 2023
        |         'mad-region': regional data of Maddison Project Database 2020
-       |         'pwt': Penn World Table 10.01
+       |         'pwt': Penn World Table 11.0
        |         'weo': IMF World Economic Outlook 2025
        |         'world-money': 177ヵ国のマネーストックなど
        |         'data1': 書籍「経済学のためのPython入門」用
@@ -723,7 +723,7 @@ def data(dataset=None, description=0):
     'jpn-yr': 日本の年次データ（GDPなど）
     'mad': country data of Maddison Project Database 2023
     'mad-region': regional data of Maddison Project Database 2023
-    'pwt': Penn World Table 10.01
+    'pwt': Penn World Table 11.0
     'weo': IMF World Economic Outlook 2025
     'world-money': 177ヵ国のマネーストックなど
     'data1': 書籍「経済学のためのPython入門」用

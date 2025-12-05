@@ -18,7 +18,7 @@
     * Big Macインデックス
     * IMF World Economic Outlook 2025
     * Maddison Project Database 2023
-    * Penn World Tables 10.01
+    * Penn World Tables 11.0
     * 日本の四半期データ（GDPなど）
     * 日本の年次データ（GDPなど）
     * 日本の四半期データ（マネーストックなど）
@@ -26,7 +26,7 @@
     * 円/ドル為替レートなど
     * 景気循環日付と拡張・後退期間
     * 政府負債に関する長期時系列データ
-    * 書籍「経済学のためのPython入門」用のデータ
+    * 書籍『経済学のためのPython入門』用のデータ
 
 # 使い方
 ```

@@ -1,5 +1,6 @@
-v0.8.16a1, 2025-??-??
-* `data1.csv`〜`data5.csv`を書籍「経済学のためのPython入門」用と明記
+v0.8.16, 2025-12-05
+* `data1.csv`〜`data5.csv`を書籍『経済学のためのPython入門』用と明記
+* Penn World Table 11.0にアップデート
 
 v0.8.15, 2025-06-01
 * `README.md`にJupyterLiteで使用する際の注意点を追加

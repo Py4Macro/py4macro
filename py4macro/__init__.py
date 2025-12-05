@@ -7,7 +7,7 @@ from .py4macro import *
 __all__ = ['data','trend','show','xvalues','recessions','fukyo', 'see']
 
 __author__ = 'Tetsu Haruyama'
-__version__ = '0.8.15'
+__version__ = '0.8.16'
 __copyright__ = 'Copyright (c) 2025 Tetsu Haruyama'
 
 __doc__ = """
@@ -20,7 +20,7 @@ __doc__ = """
         * 後退期間にグレーの塗りつぶしを追加する`fukyo()`関数
         * 後退期間にグレーの塗りつぶしを追加する`recessions()`デコレーター
         * データ・セット
-            * Penn World Tables 10.1
+            * Penn World Tables 11.0
             * IMF World Economic Outlook 2024
             * Maddison Project Database 2023
             * 日本の四半期データ（GDPなど）
@@ -31,4 +31,4 @@ __doc__ = """
             * 景気循環日付と拡張・後退期間
             * Big Mac インデックス
             * 政府負債に関する長期時系列データ
-            * 「経済学のためのPython入門」用のデータ"""
+            * 『経済学のためのPython入門』用のデータ"""
